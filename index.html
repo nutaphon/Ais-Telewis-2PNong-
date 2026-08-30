@@ -45,42 +45,21 @@
   html { scroll-behavior: smooth; }
   body { font-family: 'Prompt', sans-serif; background:#f8faf9; }
   h1,h2,h3,.font-display { font-family: 'Kanit', sans-serif; }
-
-  .sim-card {
-    position: relative;
-    clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 0 100%);
-  }
-
+  .sim-card { position: relative; clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 0 100%); }
   ::-webkit-scrollbar { height: 6px; width: 8px; }
   ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 99px; }
   ::-webkit-scrollbar-track { background: transparent; }
-
-  .brand-tab[data-active="true"] {
-    background: #16a34a;
-    color: white;
-    box-shadow: 0 6px 16px -6px rgba(22,163,74,.55);
-  }
+  .brand-tab[data-active="true"] { background: #16a34a; color: white; box-shadow: 0 6px 16px -6px rgba(22,163,74,.55); }
   .brand-tab[data-active="true"] .brand-count { color: rgba(255,255,255,.85); }
-
-  .storage-pill[data-active="true"] {
-    background: #0f172a;
-    color: #fff;
-    border-color: #0f172a;
-  }
-
+  .storage-pill[data-active="true"] { background: #0f172a; color: #fff; border-color: #0f172a; }
   .fade-in { animation: fadeIn .35s ease both; }
   @keyframes fadeIn { from { opacity:0; transform: translateY(6px);} to {opacity:1; transform:none;} }
-
   .toast { animation: toastIn .25s ease both; }
   @keyframes toastIn { from{opacity:0; transform:translateY(12px) scale(.96);} to{opacity:1; transform:none;} }
-
   input[type="number"]::-webkit-inner-spin-button { opacity: 1; }
-
   .badge-guest { background:#eef2f7; color:#334155; }
   .badge-admin { background:#0f172a; color:#fff; }
-
   .price-strike { text-decoration: line-through; text-decoration-color:#94a3b8; }
-
   [data-modal-backdrop] { backdrop-filter: blur(2px); }
 </style>
 </head>
@@ -129,8 +108,8 @@
       มือถือแท้ ประกันศูนย์ไทย ผ่อน 0% สูงสุด 10 เดือน
     </p>
     <p class="text-xs sm:text-sm text-white/90 flex items-center gap-1.5">
-      <i data-lucide="map-pin" class="w-3.5 h-3.5"></i>
-      Telewiz สาขาสองพี่น้อง จ.สุพรรณบุรี
+      <i data-lucide="radio" class="w-3.5 h-3.5 animate-pulse text-emerald-200"></i>
+      Live Cloud Sync (อัปเดตเรียลไทม์ทุกเครื่อง)
     </p>
   </div>
 </section>
@@ -150,12 +129,12 @@
 
   <div id="adminBar" class="hidden mt-4 flex flex-wrap items-center gap-2 bg-tw-ink text-white rounded-2xl px-4 py-3">
     <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400 shrink-0"></i>
-    <span class="text-sm font-medium mr-auto">โหมดแอดมิน: แก้ไขราคาทุกความจุ / สต๊อก / รายการสินค้าได้ทันที</span>
+    <span class="text-sm font-medium mr-auto">โหมดแอดมิน: แก้ไขข้อมูลแล้วระบบจะซิงค์ทุกอุปกรณ์ทันที</span>
     <button id="addPhoneBtn" class="flex items-center gap-1.5 text-xs font-medium bg-tw-green hover:bg-tw-greenLight transition-colors px-3 py-2 rounded-lg">
       <i data-lucide="plus" class="w-3.5 h-3.5"></i> เพิ่มรุ่นใหม่
     </button>
     <button id="resetPricesBtn" class="flex items-center gap-1.5 text-xs font-medium bg-white/10 hover:bg-white/20 transition-colors px-3 py-2 rounded-lg">
-      <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> คืนค่าราคาเริ่มต้น
+      <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> รีเซ็ตข้อมูลกลับค่าเริ่มต้น
     </button>
     <button id="logoutAdminBtn" class="flex items-center gap-1.5 text-xs font-medium bg-white/10 hover:bg-white/20 transition-colors px-3 py-2 rounded-lg">
       <i data-lucide="log-out" class="w-3.5 h-3.5"></i> ออกจากระบบแอดมิน
@@ -242,7 +221,7 @@
       </div>
       <div>
         <label class="text-xs font-medium text-slate-500">URL รูปภาพ</label>
-        <input id="editImage" type="text" placeholder="ปล่อยว่างไว้เพื่อใช้รูปอัตโนมัติ" class="w-full h-11 mt-1 rounded-xl border border-slate-200 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-tw-green/40" />
+        <input id="editImage" type="text" placeholder="วางลิงก์รูปภาพ https://..." class="w-full h-11 mt-1 rounded-xl border border-slate-200 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-tw-green/40" />
       </div>
       <div class="grid grid-cols-2 gap-3">
         <div>
@@ -303,138 +282,72 @@
 
 <div id="toastContainer" class="fixed bottom-4 left-1/2 -translate-x-1/2 z-[60] flex flex-col items-center gap-2"></div>
 
-<script>
+<!-- Firebase Module & Main Logic -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
+import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
+
+// Firebase Configuration จากโปรเจกต์ ais-telewis ของคุณ
+const firebaseConfig = {
+  apiKey: "AIzaSyD1vf40OPzC9ofmxSNxY2mDuhQypWv2z1E",
+  authDomain: "ais-telewis.firebaseapp.com",
+  projectId: "ais-telewis",
+  storageBucket: "ais-telewis.firebasestorage.app",
+  messagingSenderId: "144557800100",
+  appId: "1:144557800100:web:a397a96c3c08af9f9ec431",
+  measurementId: "G-0F4R0J7SYT"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const DOC_REF = doc(db, "telewiz_store", "catalog");
+
 const DEFAULT_PHONES = [
-  // Apple
-  { id:'ap-01', brand:'Apple', model:'iPhone 16 Pro Max', image:'https://placehold.co/600x600/1c1c1e/ffffff?text=iPhone+16+Pro+Max', inStock:true,
-    specs:{ display:'6.9" OLED ProMotion 120Hz', chipset:'Apple A18 Pro', camera:'48MP หลัก + 48MP อัลตร้าไวด์ + 12MP เทเลโฟโต้ 5x', battery:'4685mAh ชาร์จเร็ว 25W' },
-    variants:[ {storage:'256GB', price:48900, promo:46900}, {storage:'512GB', price:55900, promo:null}, {storage:'1TB', price:62900, promo:null} ] },
-  { id:'ap-02', brand:'Apple', model:'iPhone 16 Pro', image:'https://placehold.co/600x600/1c1c1e/ffffff?text=iPhone+16+Pro', inStock:true,
-    specs:{ display:'6.3" OLED ProMotion 120Hz', chipset:'Apple A18 Pro', camera:'48MP หลัก + 48MP อัลตร้าไวด์ + 12MP เทเลโฟโต้ 5x', battery:'3582mAh ชาร์จเร็ว 25W' },
-    variants:[ {storage:'128GB', price:42900, promo:null}, {storage:'256GB', price:46900, promo:null}, {storage:'512GB', price:54900, promo:null} ] },
-  { id:'ap-03', brand:'Apple', model:'iPhone 16 Plus', image:'https://placehold.co/600x600/1c1c1e/ffffff?text=iPhone+16+Plus', inStock:true,
-    specs:{ display:'6.7" OLED 60Hz', chipset:'Apple A18', camera:'48MP หลัก + 12MP อัลตร้าไวด์', battery:'4674mAh ชาร์จเร็ว 20W' },
-    variants:[ {storage:'128GB', price:34900, promo:null}, {storage:'256GB', price:38900, promo:null}, {storage:'512GB', price:46900, promo:null} ] },
-  { id:'ap-04', brand:'Apple', model:'iPhone 16', image:'https://placehold.co/600x600/1c1c1e/ffffff?text=iPhone+16', inStock:true,
-    specs:{ display:'6.1" OLED 60Hz', chipset:'Apple A18', camera:'48MP หลัก + 12MP อัลตร้าไวด์', battery:'3561mAh ชาร์จเร็ว 20W' },
-    variants:[ {storage:'128GB', price:29900, promo:28500}, {storage:'256GB', price:33900, promo:null}, {storage:'512GB', price:41900, promo:null} ] },
-  { id:'ap-05', brand:'Apple', model:'iPhone 15 Pro Max', image:'https://placehold.co/600x600/2c2c2e/ffffff?text=iPhone+15+Pro+Max', inStock:true,
-    specs:{ display:'6.7" OLED ProMotion 120Hz', chipset:'Apple A17 Pro', camera:'48MP หลัก + 12MP อัลตร้าไวด์ + 12MP เทเลโฟโต้ 5x', battery:'4441mAh ชาร์จเร็ว 27W' },
-    variants:[ {storage:'256GB', price:39900, promo:37900}, {storage:'512GB', price:46900, promo:null}, {storage:'1TB', price:53900, promo:null} ] },
-  { id:'ap-06', brand:'Apple', model:'iPhone 15 Pro', image:'https://placehold.co/600x600/2c2c2e/ffffff?text=iPhone+15+Pro', inStock:true,
-    specs:{ display:'6.1" OLED ProMotion 120Hz', chipset:'Apple A17 Pro', camera:'48MP หลัก + 12MP อัลตร้าไวด์ + 12MP เทเลโฟโต้ 3x', battery:'3274mAh ชาร์จเร็ว 23W' },
-    variants:[ {storage:'128GB', price:34900, promo:null}, {storage:'256GB', price:38900, promo:null}, {storage:'512GB', price:46900, promo:null} ] },
-  { id:'ap-07', brand:'Apple', model:'iPhone 15', image:'https://placehold.co/600x600/394047/ffffff?text=iPhone+15', inStock:true,
-    specs:{ display:'6.1" OLED 60Hz', chipset:'Apple A16 Bionic', camera:'48MP หลัก + 12MP อัลตร้าไวด์', battery:'3349mAh ชาร์จเร็ว 20W' },
-    variants:[ {storage:'128GB', price:27900, promo:26900}, {storage:'256GB', price:31900, promo:null}, {storage:'512GB', price:39900, promo:null} ] },
-  { id:'ap-08', brand:'Apple', model:'iPhone 14', image:'https://placehold.co/600x600/394047/ffffff?text=iPhone+14', inStock:true,
-    specs:{ display:'6.1" OLED 60Hz', chipset:'Apple A15 Bionic', camera:'12MP หลัก + 12MP อัลตร้าไวด์', battery:'3279mAh ชาร์จเร็ว 20W' },
-    variants:[ {storage:'128GB', price:22900, promo:21900}, {storage:'256GB', price:26900, promo:null} ] },
-  { id:'ap-09', brand:'Apple', model:'iPhone 13', image:'https://placehold.co/600x600/4a5158/ffffff?text=iPhone+13', inStock:true,
-    specs:{ display:'6.1" OLED 60Hz', chipset:'Apple A15 Bionic', camera:'12MP หลัก + 12MP อัลตร้าไวด์', battery:'3240mAh ชาร์จเร็ว 20W' },
-    variants:[ {storage:'128GB', price:18900, promo:17900}, {storage:'256GB', price:22900, promo:null} ] },
-  { id:'ap-10', brand:'Apple', model:'iPhone SE (3rd Gen)', image:'https://placehold.co/600x600/58606a/ffffff?text=iPhone+SE', inStock:true,
-    specs:{ display:'4.7" Retina IPS 60Hz', chipset:'Apple A15 Bionic', camera:'12MP หลัก', battery:'2018mAh ชาร์จเร็ว 20W' },
-    variants:[ {storage:'64GB', price:14900, promo:null}, {storage:'128GB', price:16900, promo:null}, {storage:'256GB', price:20900, promo:null} ] },
+  { id:'ap-01', brand:'Apple', model:'iPhone 16 Pro Max', image:'https://placehold.co/600x600/1c1c1e/ffffff?text=iPhone+16+Pro+Max', inStock:true, specs:{ display:'6.9" OLED ProMotion 120Hz', chipset:'Apple A18 Pro', camera:'48MP หลัก + 48MP อัลตร้าไวด์ + 12MP เทเลโฟโต้ 5x', battery:'4685mAh ชาร์จเร็ว 25W' }, variants:[ {storage:'256GB', price:48900, promo:46900}, {storage:'512GB', price:55900, promo:null}, {storage:'1TB', price:62900, promo:null} ] },
+  { id:'ap-02', brand:'Apple', model:'iPhone 16 Pro', image:'https://placehold.co/600x600/1c1c1e/ffffff?text=iPhone+16+Pro', inStock:true, specs:{ display:'6.3" OLED ProMotion 120Hz', chipset:'Apple A18 Pro', camera:'48MP หลัก + 48MP อัลตร้าไวด์ + 12MP เทเลโฟโต้ 5x', battery:'3582mAh ชาร์จเร็ว 25W' }, variants:[ {storage:'128GB', price:42900, promo:null}, {storage:'256GB', price:46900, promo:null}, {storage:'512GB', price:54900, promo:null} ] },
+  { id:'ap-03', brand:'Apple', model:'iPhone 16 Plus', image:'https://placehold.co/600x600/1c1c1e/ffffff?text=iPhone+16+Plus', inStock:true, specs:{ display:'6.7" OLED 60Hz', chipset:'Apple A18', camera:'48MP หลัก + 12MP อัลตร้าไวด์', battery:'4674mAh ชาร์จเร็ว 20W' }, variants:[ {storage:'128GB', price:34900, promo:null}, {storage:'256GB', price:38900, promo:null}, {storage:'512GB', price:46900, promo:null} ] },
+  { id:'ap-04', brand:'Apple', model:'iPhone 16', image:'https://placehold.co/600x600/1c1c1e/ffffff?text=iPhone+16', inStock:true, specs:{ display:'6.1" OLED 60Hz', chipset:'Apple A18', camera:'48MP หลัก + 12MP อัลตร้าไวด์', battery:'3561mAh ชาร์จเร็ว 20W' }, variants:[ {storage:'128GB', price:29900, promo:28500}, {storage:'256GB', price:33900, promo:null}, {storage:'512GB', price:41900, promo:null} ] },
+  { id:'ap-05', brand:'Apple', model:'iPhone 15 Pro Max', image:'https://placehold.co/600x600/2c2c2e/ffffff?text=iPhone+15+Pro+Max', inStock:true, specs:{ display:'6.7" OLED ProMotion 120Hz', chipset:'Apple A17 Pro', camera:'48MP หลัก + 12MP อัลตร้าไวด์ + 12MP เทเลโฟโต้ 5x', battery:'4441mAh ชาร์จเร็ว 27W' }, variants:[ {storage:'256GB', price:39900, promo:37900}, {storage:'512GB', price:46900, promo:null}, {storage:'1TB', price:53900, promo:null} ] },
+  { id:'ap-06', brand:'Apple', model:'iPhone 15 Pro', image:'https://placehold.co/600x600/2c2c2e/ffffff?text=iPhone+15+Pro', inStock:true, specs:{ display:'6.1" OLED ProMotion 120Hz', chipset:'Apple A17 Pro', camera:'48MP หลัก + 12MP อัลตร้าไวด์ + 12MP เทเลโฟโต้ 3x', battery:'3274mAh ชาร์จเร็ว 23W' }, variants:[ {storage:'128GB', price:34900, promo:null}, {storage:'256GB', price:38900, promo:null}, {storage:'512GB', price:46900, promo:null} ] },
+  { id:'ap-07', brand:'Apple', model:'iPhone 15', image:'https://placehold.co/600x600/394047/ffffff?text=iPhone+15', inStock:true, specs:{ display:'6.1" OLED 60Hz', chipset:'Apple A16 Bionic', camera:'48MP หลัก + 12MP อัลตร้าไวด์', battery:'3349mAh ชาร์จเร็ว 20W' }, variants:[ {storage:'128GB', price:27900, promo:26900}, {storage:'256GB', price:31900, promo:null}, {storage:'512GB', price:39900, promo:null} ] },
+  { id:'ap-08', brand:'Apple', model:'iPhone 14', image:'https://placehold.co/600x600/394047/ffffff?text=iPhone+14', inStock:true, specs:{ display:'6.1" OLED 60Hz', chipset:'Apple A15 Bionic', camera:'12MP หลัก + 12MP อัลตร้าไวด์', battery:'3279mAh ชาร์จเร็ว 20W' }, variants:[ {storage:'128GB', price:22900, promo:21900}, {storage:'256GB', price:26900, promo:null} ] },
+  { id:'ap-09', brand:'Apple', model:'iPhone 13', image:'https://placehold.co/600x600/4a5158/ffffff?text=iPhone+13', inStock:true, specs:{ display:'6.1" OLED 60Hz', chipset:'Apple A15 Bionic', camera:'12MP หลัก + 12MP อัลตร้าไวด์', battery:'3240mAh ชาร์จเร็ว 20W' }, variants:[ {storage:'128GB', price:18900, promo:17900}, {storage:'256GB', price:22900, promo:null} ] },
+  { id:'ap-10', brand:'Apple', model:'iPhone SE (3rd Gen)', image:'https://placehold.co/600x600/58606a/ffffff?text=iPhone+SE', inStock:true, specs:{ display:'4.7" Retina IPS 60Hz', chipset:'Apple A15 Bionic', camera:'12MP หลัก', battery:'2018mAh ชาร์จเร็ว 20W' }, variants:[ {storage:'64GB', price:14900, promo:null}, {storage:'128GB', price:16900, promo:null}, {storage:'256GB', price:20900, promo:null} ] },
 
-  // Samsung
-  { id:'sm-01', brand:'Samsung', model:'Galaxy S24 Ultra', image:'https://placehold.co/600x600/1428a0/ffffff?text=Galaxy+S24+Ultra', inStock:true,
-    specs:{ display:'6.8" Dynamic AMOLED 2X 120Hz', chipset:'Snapdragon 8 Gen 3 for Galaxy', camera:'200MP หลัก + 12MP อัลตร้าไวด์ + 50MP/10MP เทเลโฟโต้', battery:'5000mAh ชาร์จเร็ว 45W' },
-    variants:[ {storage:'256GB', price:42900, promo:39900}, {storage:'512GB', price:46900, promo:null}, {storage:'1TB', price:52900, promo:null} ] },
-  { id:'sm-02', brand:'Samsung', model:'Galaxy S24+', image:'https://placehold.co/600x600/1428a0/ffffff?text=Galaxy+S24%2B', inStock:true,
-    specs:{ display:'6.7" Dynamic AMOLED 2X 120Hz', chipset:'Exynos 2400', camera:'50MP หลัก + 12MP อัลตร้าไวด์ + 10MP เทเลโฟโต้', battery:'4900mAh ชาร์จเร็ว 45W' },
-    variants:[ {storage:'256GB', price:33900, promo:null}, {storage:'512GB', price:37900, promo:null} ] },
-  { id:'sm-03', brand:'Samsung', model:'Galaxy S24', image:'https://placehold.co/600x600/2437b8/ffffff?text=Galaxy+S24', inStock:true,
-    specs:{ display:'6.2" Dynamic AMOLED 2X 120Hz', chipset:'Exynos 2400', camera:'50MP หลัก + 12MP อัลตร้าไวด์ + 10MP เทเลโฟโต้', battery:'4000mAh ชาร์จเร็ว 25W' },
-    variants:[ {storage:'128GB', price:26900, promo:24900}, {storage:'256GB', price:29900, promo:null} ] },
-  { id:'sm-04', brand:'Samsung', model:'Galaxy Z Fold6', image:'https://placehold.co/600x600/0f1f7a/ffffff?text=Z+Fold6', inStock:true,
-    specs:{ display:'7.6" จอพับ Dynamic AMOLED 2X 120Hz', chipset:'Snapdragon 8 Gen 3 for Galaxy', camera:'50MP หลัก + 12MP อัลตร้าไวด์ + 10MP เทเลโฟโต้', battery:'4400mAh ชาร์จเร็ว 25W' },
-    variants:[ {storage:'256GB', price:59900, promo:56900}, {storage:'512GB', price:64900, promo:null}, {storage:'1TB', price:71900, promo:null} ] },
-  { id:'sm-05', brand:'Samsung', model:'Galaxy Z Flip6', image:'https://placehold.co/600x600/0f1f7a/ffffff?text=Z+Flip6', inStock:true,
-    specs:{ display:'6.7" จอพับ Dynamic AMOLED 2X 120Hz', chipset:'Snapdragon 8 Gen 3 for Galaxy', camera:'50MP หลัก + 12MP อัลตร้าไวด์', battery:'4000mAh ชาร์จเร็ว 25W' },
-    variants:[ {storage:'256GB', price:39900, promo:37900}, {storage:'512GB', price:44900, promo:null} ] },
-  { id:'sm-06', brand:'Samsung', model:'Galaxy S23 FE', image:'https://placehold.co/600x600/3149c9/ffffff?text=S23+FE', inStock:true,
-    specs:{ display:'6.4" Dynamic AMOLED 2X 120Hz', chipset:'Exynos 2200', camera:'50MP หลัก + 12MP อัลตร้าไวด์ + 8MP เทเลโฟโต้', battery:'4500mAh ชาร์จเร็ว 25W' },
-    variants:[ {storage:'128GB', price:21900, promo:19900}, {storage:'256GB', price:24900, promo:null} ] },
-  { id:'sm-07', brand:'Samsung', model:'Galaxy A55 5G', image:'https://placehold.co/600x600/4a5fd6/ffffff?text=Galaxy+A55', inStock:true,
-    specs:{ display:'6.6" Super AMOLED 120Hz', chipset:'Exynos 1480', camera:'50MP หลัก + 12MP อัลตร้าไวด์ + 5MP มาโคร', battery:'5000mAh ชาร์จเร็ว 25W' },
-    variants:[ {storage:'128GB', price:13999, promo:12999}, {storage:'256GB', price:15999, promo:null} ] },
-  { id:'sm-08', brand:'Samsung', model:'Galaxy A35 5G', image:'https://placehold.co/600x600/4a5fd6/ffffff?text=Galaxy+A35', inStock:true,
-    specs:{ display:'6.6" Super AMOLED 120Hz', chipset:'Exynos 1380', camera:'50MP หลัก + 8MP อัลตร้าไวด์ + 5MP มาโคร', battery:'5000mAh ชาร์จเร็ว 25W' },
-    variants:[ {storage:'128GB', price:10999, promo:null}, {storage:'256GB', price:12999, promo:null} ] },
-  { id:'sm-09', brand:'Samsung', model:'Galaxy A25 5G', image:'https://placehold.co/600x600/6577e0/ffffff?text=Galaxy+A25', inStock:true,
-    specs:{ display:'6.5" Super AMOLED 120Hz', chipset:'Exynos 1280', camera:'50MP หลัก + 8MP อัลตร้าไวด์ + 2MP มาโคร', battery:'5000mAh ชาร์จเร็ว 25W' },
-    variants:[ {storage:'128GB', price:8999, promo:7999}, {storage:'256GB', price:10499, promo:null} ] },
-  { id:'sm-10', brand:'Samsung', model:'Galaxy A15 5G', image:'https://placehold.co/600x600/8090eb/ffffff?text=Galaxy+A15', inStock:true,
-    specs:{ display:'6.5" Super AMOLED 90Hz', chipset:'Dimensity 6100+', camera:'50MP หลัก + 5MP อัลตร้าไวด์ + 2MP มาโคร', battery:'5000mAh ชาร์จเร็ว 25W' },
-    variants:[ {storage:'128GB', price:6499, promo:null} ] },
+  { id:'sm-01', brand:'Samsung', model:'Galaxy S24 Ultra', image:'https://placehold.co/600x600/1428a0/ffffff?text=Galaxy+S24+Ultra', inStock:true, specs:{ display:'6.8" Dynamic AMOLED 2X 120Hz', chipset:'Snapdragon 8 Gen 3 for Galaxy', camera:'200MP หลัก + 12MP อัลตร้าไวด์ + 50MP/10MP เทเลโฟโต้', battery:'5000mAh ชาร์จเร็ว 45W' }, variants:[ {storage:'256GB', price:42900, promo:39900}, {storage:'512GB', price:46900, promo:null}, {storage:'1TB', price:52900, promo:null} ] },
+  { id:'sm-02', brand:'Samsung', model:'Galaxy S24+', image:'https://placehold.co/600x600/1428a0/ffffff?text=Galaxy+S24%2B', inStock:true, specs:{ display:'6.7" Dynamic AMOLED 2X 120Hz', chipset:'Exynos 2400', camera:'50MP หลัก + 12MP อัลตร้าไวด์ + 10MP เทเลโฟโต้', battery:'4900mAh ชาร์จเร็ว 45W' }, variants:[ {storage:'256GB', price:33900, promo:null}, {storage:'512GB', price:37900, promo:null} ] },
+  { id:'sm-03', brand:'Samsung', model:'Galaxy S24', image:'https://placehold.co/600x600/2437b8/ffffff?text=Galaxy+S24', inStock:true, specs:{ display:'6.2" Dynamic AMOLED 2X 120Hz', chipset:'Exynos 2400', camera:'50MP หลัก + 12MP อัลตร้าไวด์ + 10MP เทเลโฟโต้', battery:'4000mAh ชาร์จเร็ว 25W' }, variants:[ {storage:'128GB', price:26900, promo:24900}, {storage:'256GB', price:29900, promo:null} ] },
+  { id:'sm-04', brand:'Samsung', model:'Galaxy Z Fold6', image:'https://placehold.co/600x600/0f1f7a/ffffff?text=Z+Fold6', inStock:true, specs:{ display:'7.6" จอพับ Dynamic AMOLED 2X 120Hz', chipset:'Snapdragon 8 Gen 3 for Galaxy', camera:'50MP หลัก + 12MP อัลตร้าไวด์ + 10MP เทเลโฟโต้', battery:'4400mAh ชาร์จเร็ว 25W' }, variants:[ {storage:'256GB', price:59900, promo:56900}, {storage:'512GB', price:64900, promo:null}, {storage:'1TB', price:71900, promo:null} ] },
+  { id:'sm-05', brand:'Samsung', model:'Galaxy Z Flip6', image:'https://placehold.co/600x600/0f1f7a/ffffff?text=Z+Flip6', inStock:true, specs:{ display:'6.7" จอพับ Dynamic AMOLED 2X 120Hz', chipset:'Snapdragon 8 Gen 3 for Galaxy', camera:'50MP หลัก + 12MP อัลตร้าไวด์', battery:'4000mAh ชาร์จเร็ว 25W' }, variants:[ {storage:'256GB', price:39900, promo:37900}, {storage:'512GB', price:44900, promo:null} ] },
+  { id:'sm-06', brand:'Samsung', model:'Galaxy S23 FE', image:'https://placehold.co/600x600/3149c9/ffffff?text=S23+FE', inStock:true, specs:{ display:'6.4" Dynamic AMOLED 2X 120Hz', chipset:'Exynos 2200', camera:'50MP หลัก + 12MP อัลตร้าไวด์ + 8MP เทเลโฟโต้', battery:'4500mAh ชาร์จเร็ว 25W' }, variants:[ {storage:'128GB', price:21900, promo:19900}, {storage:'256GB', price:24900, promo:null} ] },
+  { id:'sm-07', brand:'Samsung', model:'Galaxy A55 5G', image:'https://placehold.co/600x600/4a5fd6/ffffff?text=Galaxy+A55', inStock:true, specs:{ display:'6.6" Super AMOLED 120Hz', chipset:'Exynos 1480', camera:'50MP หลัก + 12MP อัลตร้าไวด์ + 5MP มาโคร', battery:'5000mAh ชาร์จเร็ว 25W' }, variants:[ {storage:'128GB', price:13999, promo:12999}, {storage:'256GB', price:15999, promo:null} ] },
+  { id:'sm-08', brand:'Samsung', model:'Galaxy A35 5G', image:'https://placehold.co/600x600/4a5fd6/ffffff?text=Galaxy+A35', inStock:true, specs:{ display:'6.6" Super AMOLED 120Hz', chipset:'Exynos 1380', camera:'50MP หลัก + 8MP อัลตร้าไวด์ + 5MP มาโคร', battery:'5000mAh ชาร์จเร็ว 25W' }, variants:[ {storage:'128GB', price:10999, promo:null}, {storage:'256GB', price:12999, promo:null} ] },
+  { id:'sm-09', brand:'Samsung', model:'Galaxy A25 5G', image:'https://placehold.co/600x600/6577e0/ffffff?text=Galaxy+A25', inStock:true, specs:{ display:'6.5" Super AMOLED 120Hz', chipset:'Exynos 1280', camera:'50MP หลัก + 8MP อัลตร้าไวด์ + 2MP มาโคร', battery:'5000mAh ชาร์จเร็ว 25W' }, variants:[ {storage:'128GB', price:8999, promo:7999}, {storage:'256GB', price:10499, promo:null} ] },
+  { id:'sm-10', brand:'Samsung', model:'Galaxy A15 5G', image:'https://placehold.co/600x600/8090eb/ffffff?text=Galaxy+A15', inStock:true, specs:{ display:'6.5" Super AMOLED 90Hz', chipset:'Dimensity 6100+', camera:'50MP หลัก + 5MP อัลตร้าไวด์ + 2MP มาโคร', battery:'5000mAh ชาร์จเร็ว 25W' }, variants:[ {storage:'128GB', price:6499, promo:null} ] },
 
-  // Vivo
-  { id:'vv-01', brand:'Vivo', model:'Vivo X100 Pro 5G', image:'https://placehold.co/600x600/0b0b0b/ffffff?text=Vivo+X100+Pro', inStock:true,
-    specs:{ display:'6.78" AMOLED LTPO 120Hz', chipset:'MediaTek Dimensity 9300', camera:'ZEISS 50MP หลัก + 50MP อัลตร้าไวด์ + 50MP เทเลโฟโต้ periscope', battery:'5400mAh ชาร์จเร็ว 100W' },
-    variants:[ {storage:'256GB', price:29999, promo:null}, {storage:'512GB', price:32999, promo:29999} ] },
-  { id:'vv-02', brand:'Vivo', model:'Vivo X100 5G', image:'https://placehold.co/600x600/0b0b0b/ffffff?text=Vivo+X100', inStock:true,
-    specs:{ display:'6.78" AMOLED LTPO 120Hz', chipset:'MediaTek Dimensity 9300', camera:'ZEISS 50MP หลัก + 50MP อัลตร้าไวด์ + 64MP เทเลโฟโต้', battery:'5000mAh ชาร์จเร็ว 120W' },
-    variants:[ {storage:'256GB', price:24999, promo:null}, {storage:'512GB', price:27999, promo:null} ] },
-  { id:'vv-03', brand:'Vivo', model:'Vivo V40 Pro 5G', image:'https://placehold.co/600x600/1a1a1a/ffffff?text=Vivo+V40+Pro', inStock:true,
-    specs:{ display:'6.78" AMOLED 120Hz', chipset:'MediaTek Dimensity 8300', camera:'ZEISS 50MP หลัก + 50MP อัลตร้าไวด์ + 50MP เทเลโฟโต้', battery:'5500mAh ชาร์จเร็ว 80W' },
-    variants:[ {storage:'256GB', price:19999, promo:18499}, {storage:'512GB', price:22999, promo:null} ] },
-  { id:'vv-04', brand:'Vivo', model:'Vivo V40 5G', image:'https://placehold.co/600x600/1a1a1a/ffffff?text=Vivo+V40', inStock:true,
-    specs:{ display:'6.78" AMOLED 120Hz', chipset:'Snapdragon 7 Gen 3', camera:'ZEISS 50MP หลัก + 50MP อัลตร้าไวด์', battery:'5500mAh ชาร์จเร็ว 80W' },
-    variants:[ {storage:'256GB', price:14999, promo:null}, {storage:'512GB', price:17999, promo:null} ] },
-  { id:'vv-05', brand:'Vivo', model:'Vivo V40e 5G', image:'https://placehold.co/600x600/262626/ffffff?text=Vivo+V40e', inStock:true,
-    specs:{ display:'6.77" AMOLED 120Hz', chipset:'Snapdragon 6 Gen 3', camera:'50MP หลัก + 8MP อัลตร้าไวด์', battery:'5500mAh ชาร์จเร็ว 44W' },
-    variants:[ {storage:'256GB', price:11999, promo:10999} ] },
-  { id:'vv-06', brand:'Vivo', model:'Vivo V30 5G', image:'https://placehold.co/600x600/262626/ffffff?text=Vivo+V30', inStock:true,
-    specs:{ display:'6.78" AMOLED 3D Curved 120Hz', chipset:'Snapdragon 7 Gen 3', camera:'ZEISS 50MP หลัก + 50MP อัลตร้าไวด์', battery:'5000mAh ชาร์จเร็ว 80W' },
-    variants:[ {storage:'256GB', price:13999, promo:null}, {storage:'512GB', price:16999, promo:null} ] },
-  { id:'vv-07', brand:'Vivo', model:'Vivo Y200 5G', image:'https://placehold.co/600x600/333333/ffffff?text=Vivo+Y200', inStock:true,
-    specs:{ display:'6.67" AMOLED โค้ง 3D 120Hz', chipset:'Snapdragon 4 Gen 2', camera:'64MP หลัก OIS + 2MP ความลึก', battery:'5000mAh ชาร์จเร็ว 44W' },
-    variants:[ {storage:'128GB', price:8999, promo:7999}, {storage:'256GB', price:10499, promo:null} ] },
-  { id:'vv-08', brand:'Vivo', model:'Vivo Y100 5G', image:'https://placehold.co/600x600/3d3d3d/ffffff?text=Vivo+Y100', inStock:true,
-    specs:{ display:'6.64" AMOLED 120Hz', chipset:'Snapdragon 4 Gen 2', camera:'50MP หลัก + 2MP มาโคร', battery:'5000mAh ชาร์จเร็ว 44W' },
-    variants:[ {storage:'128GB', price:7499, promo:null}, {storage:'256GB', price:8999, promo:null} ] },
-  { id:'vv-09', brand:'Vivo', model:'Vivo Y28 5G', image:'https://placehold.co/600x600/474747/ffffff?text=Vivo+Y28', inStock:true,
-    specs:{ display:'6.56" IPS LCD 90Hz', chipset:'MediaTek Dimensity 6300', camera:'50MP หลัก + AI เลนส์', battery:'6000mAh ชาร์จเร็ว 15W' },
-    variants:[ {storage:'128GB', price:5999, promo:5499}, {storage:'256GB', price:6999, promo:null} ] },
-  { id:'vv-10', brand:'Vivo', model:'Vivo Y18', image:'https://placehold.co/600x600/525252/ffffff?text=Vivo+Y18', inStock:false,
-    specs:{ display:'6.56" IPS LCD 90Hz', chipset:'MediaTek Helio G85', camera:'13MP หลัก + AI เลนส์', battery:'5000mAh ชาร์จ 10W' },
-    variants:[ {storage:'128GB', price:3999, promo:null} ] },
+  { id:'vv-01', brand:'Vivo', model:'Vivo X100 Pro 5G', image:'https://placehold.co/600x600/0b0b0b/ffffff?text=Vivo+X100+Pro', inStock:true, specs:{ display:'6.78" AMOLED LTPO 120Hz', chipset:'MediaTek Dimensity 9300', camera:'ZEISS 50MP หลัก + 50MP อัลตร้าไวด์ + 50MP เทเลโฟโต้ periscope', battery:'5400mAh ชาร์จเร็ว 100W' }, variants:[ {storage:'256GB', price:29999, promo:null}, {storage:'512GB', price:32999, promo:29999} ] },
+  { id:'vv-02', brand:'Vivo', model:'Vivo X100 5G', image:'https://placehold.co/600x600/0b0b0b/ffffff?text=Vivo+X100', inStock:true, specs:{ display:'6.78" AMOLED LTPO 120Hz', chipset:'MediaTek Dimensity 9300', camera:'ZEISS 50MP หลัก + 50MP อัลตร้าไวด์ + 64MP เทเลโฟโต้', battery:'5000mAh ชาร์จเร็ว 120W' }, variants:[ {storage:'256GB', price:24999, promo:null}, {storage:'512GB', price:27999, promo:null} ] },
+  { id:'vv-03', brand:'Vivo', model:'Vivo V40 Pro 5G', image:'https://placehold.co/600x600/1a1a1a/ffffff?text=Vivo+V40+Pro', inStock:true, specs:{ display:'6.78" AMOLED 120Hz', chipset:'MediaTek Dimensity 8300', camera:'ZEISS 50MP หลัก + 50MP อัลตร้าไวด์ + 50MP เทเลโฟโต้', battery:'5500mAh ชาร์จเร็ว 80W' }, variants:[ {storage:'256GB', price:19999, promo:18499}, {storage:'512GB', price:22999, promo:null} ] },
+  { id:'vv-04', brand:'Vivo', model:'Vivo V40 5G', image:'https://placehold.co/600x600/1a1a1a/ffffff?text=Vivo+V40', inStock:true, specs:{ display:'6.78" AMOLED 120Hz', chipset:'Snapdragon 7 Gen 3', camera:'ZEISS 50MP หลัก + 50MP อัลตร้าไวด์', battery:'5500mAh ชาร์จเร็ว 80W' }, variants:[ {storage:'256GB', price:14999, promo:null}, {storage:'512GB', price:17999, promo:null} ] },
+  { id:'vv-05', brand:'Vivo', model:'Vivo V40e 5G', image:'https://placehold.co/600x600/262626/ffffff?text=Vivo+V40e', inStock:true, specs:{ display:'6.77" AMOLED 120Hz', chipset:'Snapdragon 6 Gen 3', camera:'50MP หลัก + 8MP อัลตร้าไวด์', battery:'5500mAh ชาร์จเร็ว 44W' }, variants:[ {storage:'256GB', price:11999, promo:10999} ] },
+  { id:'vv-06', brand:'Vivo', model:'Vivo V30 5G', image:'https://placehold.co/600x600/262626/ffffff?text=Vivo+V30', inStock:true, specs:{ display:'6.78" AMOLED 3D Curved 120Hz', chipset:'Snapdragon 7 Gen 3', camera:'ZEISS 50MP หลัก + 50MP อัลตร้าไวด์', battery:'5000mAh ชาร์จเร็ว 80W' }, variants:[ {storage:'256GB', price:13999, promo:null}, {storage:'512GB', price:16999, promo:null} ] },
+  { id:'vv-07', brand:'Vivo', model:'Vivo Y200 5G', image:'https://placehold.co/600x600/333333/ffffff?text=Vivo+Y200', inStock:true, specs:{ display:'6.67" AMOLED โค้ง 3D 120Hz', chipset:'Snapdragon 4 Gen 2', camera:'64MP หลัก OIS + 2MP ความลึก', battery:'5000mAh ชาร์จเร็ว 44W' }, variants:[ {storage:'128GB', price:8999, promo:7999}, {storage:'256GB', price:10499, promo:null} ] },
+  { id:'vv-08', brand:'Vivo', model:'Vivo Y100 5G', image:'https://placehold.co/600x600/3d3d3d/ffffff?text=Vivo+Y100', inStock:true, specs:{ display:'6.64" AMOLED 120Hz', chipset:'Snapdragon 4 Gen 2', camera:'50MP หลัก + 2MP มาโคร', battery:'5000mAh ชาร์จเร็ว 44W' }, variants:[ {storage:'128GB', price:7499, promo:null}, {storage:'256GB', price:8999, promo:null} ] },
+  { id:'vv-09', brand:'Vivo', model:'Vivo Y28 5G', image:'https://placehold.co/600x600/474747/ffffff?text=Vivo+Y28', inStock:true, specs:{ display:'6.56" IPS LCD 90Hz', chipset:'MediaTek Dimensity 6300', camera:'50MP หลัก + AI เลนส์', battery:'6000mAh ชาร์จเร็ว 15W' }, variants:[ {storage:'128GB', price:5999, promo:5499}, {storage:'256GB', price:6999, promo:null} ] },
+  { id:'vv-10', brand:'Vivo', model:'Vivo Y18', image:'https://placehold.co/600x600/525252/ffffff?text=Vivo+Y18', inStock:false, specs:{ display:'6.56" IPS LCD 90Hz', chipset:'MediaTek Helio G85', camera:'13MP หลัก + AI เลนส์', battery:'5000mAh ชาร์จ 10W' }, variants:[ {storage:'128GB', price:3999, promo:null} ] },
 
-  // OPPO
-  { id:'op-01', brand:'OPPO', model:'OPPO Find N3', image:'https://placehold.co/600x600/1a7a3c/ffffff?text=Find+N3', inStock:true,
-    specs:{ display:'7.82" จอพับ AMOLED LTPO 120Hz', chipset:'Snapdragon 8 Gen 2', camera:'Hasselblad 48MP หลัก + 48MP อัลตร้าไวด์ + 64MP เทเลโฟโต้ 3x', battery:'4805mAh ชาร์จเร็ว 67W' },
-    variants:[ {storage:'512GB', price:59900, promo:54900}, {storage:'1TB', price:66900, promo:null} ] },
-  { id:'op-02', brand:'OPPO', model:'OPPO Find X8 Pro', image:'https://placehold.co/600x600/1a7a3c/ffffff?text=Find+X8+Pro', inStock:true,
-    specs:{ display:'6.78" AMOLED LTPO 120Hz', chipset:'MediaTek Dimensity 9400', camera:'Hasselblad 50MP หลัก + 50MP อัลตร้าไวด์ + 50MP/50MP เทเลโฟโต้คู่', battery:'5910mAh ชาร์จเร็ว 100W' },
-    variants:[ {storage:'256GB', price:34999, promo:32999}, {storage:'512GB', price:38999, promo:null} ] },
-  { id:'op-03', brand:'OPPO', model:'OPPO Find X8', image:'https://placehold.co/600x600/22913f/ffffff?text=Find+X8', inStock:true,
-    specs:{ display:'6.59" AMOLED LTPO 120Hz', chipset:'MediaTek Dimensity 9400', camera:'Hasselblad 50MP หลัก + 50MP อัลตร้าไวด์ + 50MP เทเลโฟโต้', battery:'5630mAh ชาร์จเร็ว 80W' },
-    variants:[ {storage:'256GB', price:27999, promo:null}, {storage:'512GB', price:30999, promo:null} ] },
-  { id:'op-04', brand:'OPPO', model:'OPPO Reno12 Pro 5G', image:'https://placehold.co/600x600/2ba84c/ffffff?text=Reno12+Pro', inStock:true,
-    specs:{ display:'6.7" AMOLED โค้ง 120Hz', chipset:'MediaTek Dimensity 7300-Energy', camera:'50MP หลัก + 8MP อัลตร้าไวด์ + 50MP เทเลโฟโต้', battery:'5000mAh ชาร์จเร็ว 80W' },
-    variants:[ {storage:'256GB', price:19999, promo:17999}, {storage:'512GB', price:22999, promo:null} ] },
-  { id:'op-05', brand:'OPPO', model:'OPPO Reno12 5G', image:'https://placehold.co/600x600/2ba84c/ffffff?text=Reno12', inStock:true,
-    specs:{ display:'6.7" AMOLED โค้ง 120Hz', chipset:'MediaTek Dimensity 7300-Energy', camera:'50MP หลัก + 8MP อัลตร้าไวด์ + 2MP มาโคร', battery:'5000mAh ชาร์จเร็ว 67W' },
-    variants:[ {storage:'256GB', price:14999, promo:null}, {storage:'512GB', price:17999, promo:null} ] },
-  { id:'op-06', brand:'OPPO', model:'OPPO Reno12 F 5G', image:'https://placehold.co/600x600/34b85c/ffffff?text=Reno12+F', inStock:true,
-    specs:{ display:'6.67" AMOLED โค้ง 120Hz', chipset:'MediaTek Dimensity 6300', camera:'64MP หลัก OIS + 2MP ความลึก', battery:'5000mAh ชาร์จเร็ว 45W' },
-    variants:[ {storage:'256GB', price:10999, promo:9999} ] },
-  { id:'op-07', brand:'OPPO', model:'OPPO A3 Pro 5G', image:'https://placehold.co/600x600/47c46e/ffffff?text=A3+Pro', inStock:true,
-    specs:{ display:'6.67" AMOLED 120Hz กันน้ำ IP69', chipset:'MediaTek Dimensity 6300', camera:'50MP หลัก + AI เลนส์', battery:'5800mAh ชาร์จเร็ว 45W' },
-    variants:[ {storage:'128GB', price:6999, promo:6499}, {storage:'256GB', price:7999, promo:null} ] },
-  { id:'op-08', brand:'OPPO', model:'OPPO A79 5G', image:'https://placehold.co/600x600/47c46e/ffffff?text=OPPO+A79', inStock:true,
-    specs:{ display:'6.72" AMOLED 90Hz', chipset:'MediaTek Dimensity 6020', camera:'50MP หลัก + 2MP ความลึก', battery:'5000mAh ชาร์จเร็ว 33W' },
-    variants:[ {storage:'128GB', price:8999, promo:null}, {storage:'256GB', price:10499, promo:null} ] },
-  { id:'op-09', brand:'OPPO', model:'OPPO A58', image:'https://placehold.co/600x600/5bd07f/ffffff?text=OPPO+A58', inStock:true,
-    specs:{ display:'6.72" IPS LCD 90Hz', chipset:'MediaTek Helio G85', camera:'50MP หลัก + AI เลนส์', battery:'5000mAh ชาร์จเร็ว 33W' },
-    variants:[ {storage:'128GB', price:5999, promo:5499}, {storage:'256GB', price:6999, promo:null} ] },
-  { id:'op-10', brand:'OPPO', model:'OPPO A38', image:'https://placehold.co/600x600/6fda90/ffffff?text=OPPO+A38', inStock:false,
-    specs:{ display:'6.56" IPS LCD 90Hz', chipset:'MediaTek Helio G85', camera:'50MP หลัก + AI เลนส์', battery:'5000mAh ชาร์จ 10W' },
-    variants:[ {storage:'128GB', price:4299, promo:null} ] },
+  { id:'op-01', brand:'OPPO', model:'OPPO Find N3', image:'https://placehold.co/600x600/1a7a3c/ffffff?text=Find+N3', inStock:true, specs:{ display:'7.82" จอพับ AMOLED LTPO 120Hz', chipset:'Snapdragon 8 Gen 2', camera:'Hasselblad 48MP หลัก + 48MP อัลตร้าไวด์ + 64MP เทเลโฟโต้ 3x', battery:'4805mAh ชาร์จเร็ว 67W' }, variants:[ {storage:'512GB', price:59900, promo:54900}, {storage:'1TB', price:66900, promo:null} ] },
+  { id:'op-02', brand:'OPPO', model:'OPPO Find X8 Pro', image:'https://placehold.co/600x600/1a7a3c/ffffff?text=Find+X8+Pro', inStock:true, specs:{ display:'6.78" AMOLED LTPO 120Hz', chipset:'MediaTek Dimensity 9400', camera:'Hasselblad 50MP หลัก + 50MP อัลตร้าไวด์ + 50MP/50MP เทเลโฟโต้คู่', battery:'5910mAh ชาร์จเร็ว 100W' }, variants:[ {storage:'256GB', price:34999, promo:32999}, {storage:'512GB', price:38999, promo:null} ] },
+  { id:'op-03', brand:'OPPO', model:'OPPO Find X8', image:'https://placehold.co/600x600/22913f/ffffff?text=Find+X8', inStock:true, specs:{ display:'6.59" AMOLED LTPO 120Hz', chipset:'MediaTek Dimensity 9400', camera:'Hasselblad 50MP หลัก + 50MP อัลตร้าไวด์ + 50MP เทเลโฟโต้', battery:'5630mAh ชาร์จเร็ว 80W' }, variants:[ {storage:'256GB', price:27999, promo:null}, {storage:'512GB', price:30999, promo:null} ] },
+  { id:'op-04', brand:'OPPO', model:'OPPO Reno12 Pro 5G', image:'https://placehold.co/600x600/2ba84c/ffffff?text=Reno12+Pro', inStock:true, specs:{ display:'6.7" AMOLED โค้ง 120Hz', chipset:'MediaTek Dimensity 7300-Energy', camera:'50MP หลัก + 8MP อัลตร้าไวด์ + 50MP เทเลโฟโต้', battery:'5000mAh ชาร์จเร็ว 80W' }, variants:[ {storage:'256GB', price:19999, promo:17999}, {storage:'512GB', price:22999, promo:null} ] },
+  { id:'op-05', brand:'OPPO', model:'OPPO Reno12 5G', image:'https://placehold.co/600x600/2ba84c/ffffff?text=Reno12', inStock:true, specs:{ display:'6.7" AMOLED โค้ง 120Hz', chipset:'MediaTek Dimensity 7300-Energy', camera:'50MP หลัก + 8MP อัลตร้าไวด์ + 2MP มาโคร', battery:'5000mAh ชาร์จเร็ว 67W' }, variants:[ {storage:'256GB', price:14999, promo:null}, {storage:'512GB', price:17999, promo:null} ] },
+  { id:'op-06', brand:'OPPO', model:'OPPO Reno12 F 5G', image:'https://placehold.co/600x600/34b85c/ffffff?text=Reno12+F', inStock:true, specs:{ display:'6.67" AMOLED โค้ง 120Hz', chipset:'MediaTek Dimensity 6300', camera:'64MP หลัก OIS + 2MP ความลึก', battery:'5000mAh ชาร์จเร็ว 45W' }, variants:[ {storage:'256GB', price:10999, promo:9999} ] },
+  { id:'op-07', brand:'OPPO', model:'OPPO A3 Pro 5G', image:'https://placehold.co/600x600/47c46e/ffffff?text=A3+Pro', inStock:true, specs:{ display:'6.67" AMOLED 120Hz กันน้ำ IP69', chipset:'MediaTek Dimensity 6300', camera:'50MP หลัก + AI เลนส์', battery:'5800mAh ชาร์จเร็ว 45W' }, variants:[ {storage:'128GB', price:6999, promo:6499}, {storage:'256GB', price:7999, promo:null} ] },
+  { id:'op-08', brand:'OPPO', model:'OPPO A79 5G', image:'https://placehold.co/600x600/47c46e/ffffff?text=OPPO+A79', inStock:true, specs:{ display:'6.72" AMOLED 90Hz', chipset:'MediaTek Dimensity 6020', camera:'50MP หลัก + 2MP ความลึก', battery:'5000mAh ชาร์จเร็ว 33W' }, variants:[ {storage:'128GB', price:8999, promo:null}, {storage:'256GB', price:10499, promo:null} ] },
+  { id:'op-09', brand:'OPPO', model:'OPPO A58', image:'https://placehold.co/600x600/5bd07f/ffffff?text=OPPO+A58', inStock:true, specs:{ display:'6.72" IPS LCD 90Hz', chipset:'MediaTek Helio G85', camera:'50MP หลัก + AI เลนส์', battery:'5000mAh ชาร์จเร็ว 33W' }, variants:[ {storage:'128GB', price:5999, promo:5499}, {storage:'256GB', price:6999, promo:null} ] },
+  { id:'op-10', brand:'OPPO', model:'OPPO A38', image:'https://placehold.co/600x600/6fda90/ffffff?text=OPPO+A38', inStock:false, specs:{ display:'6.56" IPS LCD 90Hz', chipset:'MediaTek Helio G85', camera:'50MP หลัก + AI เลนส์', battery:'5000mAh ชาร์จ 10W' }, variants:[ {storage:'128GB', price:4299, promo:null} ] },
 ];
 
-const STORAGE_KEY = 'telewiz_phones_v2';
 const ADMIN_PIN = '1234';
 
 const state = {
@@ -448,17 +361,13 @@ const state = {
   variantRowCount: 0,
 };
 
-function loadPhones() {
+async function syncToFirebase(data) {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) return JSON.parse(raw);
-  } catch (e) { console.warn(e); }
-  return JSON.parse(JSON.stringify(DEFAULT_PHONES));
-}
-
-function savePhones() {
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state.phones)); }
-  catch (e) { console.warn(e); }
+    await setDoc(DOC_REF, { items: data });
+  } catch (err) {
+    console.error("Firebase sync error:", err);
+    toast("บันทึกข้อมูลไม่สำเร็จ ตรวจสอบการตั้งค่า Firebase Rules", "alert-triangle");
+  }
 }
 
 const thb = n => new Intl.NumberFormat('th-TH').format(n);
@@ -662,9 +571,8 @@ function bindCardEvents() {
       const phone = state.phones.find(p => p.id === id);
       const variant = phone.variants.find(v => v.storage === storageKey);
       variant.price = Math.max(0, parseInt(input.value || '0', 10));
-      savePhones();
-      renderGrid();
-      toast(`อัปเดตราคา ${phone.model} (${storageKey}) เรียบร้อย`, 'tag');
+      syncToFirebase(state.phones);
+      toast(`อัปเดตราคา ${phone.model} เรียบร้อย`, 'tag');
     });
   });
 
@@ -676,9 +584,8 @@ function bindCardEvents() {
       const variant = phone.variants.find(v => v.storage === storageKey);
       const raw = input.value.trim();
       variant.promo = raw === '' ? null : Math.max(0, parseInt(raw, 10));
-      savePhones();
-      renderGrid();
-      toast(`อัปเดตราคาโปรโมชั่น ${phone.model} (${storageKey}) เรียบร้อย`, 'badge-percent');
+      syncToFirebase(state.phones);
+      toast(`อัปเดตราคาโปรโมชั่น ${phone.model} เรียบร้อย`, 'badge-percent');
     });
   });
 
@@ -687,8 +594,7 @@ function bindCardEvents() {
       const id = btn.dataset.toggleStock;
       const phone = state.phones.find(p => p.id === id);
       phone.inStock = !phone.inStock;
-      savePhones();
-      renderGrid();
+      syncToFirebase(state.phones);
       toast(`${phone.model}: ${phone.inStock ? 'มีสินค้า' : 'สินค้าหมด'}`, phone.inStock ? 'package-check' : 'package-x');
     });
   });
@@ -867,7 +773,7 @@ $('cancelEditBtn').addEventListener('click', closeEditModal);
 $('editModal').addEventListener('click', (e) => { if (e.target === $('editModal')) closeEditModal(); });
 $('addPhoneBtn').addEventListener('click', () => openEditModal(null));
 
-$('editForm').addEventListener('submit', (e) => {
+$('editForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const id = $('editId').value;
   
@@ -909,20 +815,20 @@ $('editForm').addEventListener('submit', (e) => {
 
   if (variants.length === 0) { toast('กรุณาระบุความจุและราคาอย่างน้อย 1 รายการ', 'alert-triangle'); return; }
 
+  let updatedList = [...state.phones];
   if (id) {
-    const phone = state.phones.find(p => p.id === id);
-    Object.assign(phone, { brand, model, image, inStock, specs, variants });
-    delete state.selectedStorage[id];
-    toast(`บันทึกการแก้ไข ${model} เรียบร้อย`, 'save');
+    const idx = updatedList.findIndex(p => p.id === id);
+    if (idx !== -1) {
+      updatedList[idx] = { ...updatedList[idx], brand, model, image, inStock, specs, variants };
+    }
   } else {
     const newId = (brand.toLowerCase().replace(/[^a-z0-9]/g, '').slice(0,3) || 'ph') + '-' + Date.now();
-    state.phones.push({ id: newId, brand, model, image, inStock, specs, variants });
-    toast(`เพิ่มรุ่น ${model} เรียบร้อย`, 'plus-circle');
+    updatedList.unshift({ id: newId, brand, model, image, inStock, specs, variants });
   }
-  savePhones();
+
+  await syncToFirebase(updatedList);
   closeEditModal();
-  renderBrandTabs();
-  renderGrid();
+  toast('บันทึกข้อมูลเรียบร้อย ข้อมูลจะซิงค์ทุกอุปกรณ์ทันที', 'cloud-upload');
 });
 
 function openDeleteModal(id) {
@@ -935,35 +841,36 @@ function openDeleteModal(id) {
 function closeDeleteModal() { $('deleteModal').classList.add('hidden'); state.deletingId = null; }
 $('cancelDeleteBtn').addEventListener('click', closeDeleteModal);
 $('deleteModal').addEventListener('click', (e) => { if (e.target === $('deleteModal')) closeDeleteModal(); });
-$('confirmDeleteBtn').addEventListener('click', () => {
+
+$('confirmDeleteBtn').addEventListener('click', async () => {
   const id = state.deletingId;
-  const phone = state.phones.find(p => p.id === id);
-  state.phones = state.phones.filter(p => p.id !== id);
-  delete state.selectedStorage[id];
-  savePhones();
+  const updatedList = state.phones.filter(p => p.id !== id);
+  await syncToFirebase(updatedList);
   closeDeleteModal();
-  renderBrandTabs();
-  renderGrid();
-  toast(`ลบ ${phone.model} ออกจากระบบแล้ว`, 'trash-2');
+  toast(`ลบข้อมูลเรียบร้อยแล้ว`, 'trash-2');
 });
 
-$('resetPricesBtn').addEventListener('click', () => {
-  if (!confirm('ยืนยันคืนค่าราคาและรายการสินค้าทั้งหมดกลับเป็นค่าเริ่มต้น?')) return;
-  state.phones = JSON.parse(JSON.stringify(DEFAULT_PHONES));
-  state.selectedStorage = {};
-  savePhones();
-  renderBrandTabs();
-  renderGrid();
-  toast('คืนค่าราคาเริ่มต้นเรียบร้อย', 'rotate-ccw');
+$('resetPricesBtn').addEventListener('click', async () => {
+  if (!confirm('ยืนยันรีเซ็ตข้อมูลทั้งหมดกลับเป็นค่าเริ่มต้นบนคลาวด์?')) return;
+  await syncToFirebase(DEFAULT_PHONES);
+  toast('คืนค่าเริ่มต้นเรียบร้อย', 'rotate-ccw');
 });
 
-function init() {
-  state.phones = loadPhones();
-  renderBrandTabs();
-  renderGrid();
-  refreshIcons();
+async function initRealtime() {
+  onSnapshot(DOC_REF, async (docSnap) => {
+    if (docSnap.exists() && docSnap.data().items) {
+      state.phones = docSnap.data().items;
+    } else {
+      state.phones = DEFAULT_PHONES;
+      await syncToFirebase(DEFAULT_PHONES);
+    }
+    renderBrandTabs();
+    renderGrid();
+    refreshIcons();
+  });
 }
-init();
+
+initRealtime();
 </script>
 </body>
 </html>
