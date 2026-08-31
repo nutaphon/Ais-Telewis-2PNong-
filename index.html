@@ -35,7 +35,7 @@
         boxShadow: {
           card: '0 1px 2px rgba(15,23,42,.04), 0 8px 24px -12px rgba(15,23,42,.12)',
           cardHover: '0 8px 16px -4px rgba(15,23,42,.08), 0 24px 48px -16px rgba(15,23,42,.18)',
-          flash: '0 10px 30px -5px rgba(220, 38, 38, 0.4)',
+          flash: '0 10px 25px -5px rgba(220, 38, 38, 0.35)',
         }
       }
     }
@@ -46,7 +46,7 @@
   html { scroll-behavior: smooth; }
   body { font-family: 'Prompt', sans-serif; background:#f8faf9; }
   h1,h2,h3,.font-display { font-family: 'Kanit', sans-serif; }
-  .sim-card { position: relative; clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 0 100%); }
+  .sim-card { position: relative; clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%); }
   ::-webkit-scrollbar { height: 6px; width: 8px; }
   ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 99px; }
   ::-webkit-scrollbar-track { background: transparent; }
@@ -73,19 +73,18 @@
   }
   .flash-card-border {
     position: relative;
-    border: 2px solid #fee2e2;
+    border: 1.5px solid #fee2e2;
     transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.2s ease;
     user-select: none;
   }
   .flash-card-border:hover {
     border-color: #ef4444;
-    transform: translateY(-4px);
+    transform: translateY(-2px);
   }
   .flash-badge-corner {
     clip-path: polygon(0 0, 100% 0, 85% 100%, 0% 100%);
   }
 
-  /* Shimmer / Glow Animation on Flash Sale Badge */
   .flash-shimmer-badge {
     position: relative;
     overflow: hidden;
@@ -107,12 +106,11 @@
     50%, 100% { left: 200%; }
   }
 
-  /* Smooth Grab & Dragging Styles */
   #flashSaleContainer {
     cursor: grab;
     user-select: none;
     -webkit-overflow-scrolling: touch;
-    touch-action: pan-y pinch-zoom;
+    touch-action: pan-x pan-y;
   }
   #flashSaleContainer.is-dragging {
     cursor: grabbing;
@@ -175,57 +173,57 @@
   </div>
 </section>
 
-<!-- Flash Sale Section (With Floating Side Arrows) -->
-<section id="flashSaleSection" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
-  <div class="flash-sale-wrapper rounded-3xl p-4 sm:p-6 text-white shadow-flash relative">
-    <div class="flex flex-wrap items-center justify-between gap-3 mb-4 border-b border-white/20 pb-4">
-      <div class="flex items-center gap-3">
-        <div class="w-11 h-11 rounded-2xl bg-amber-400 text-slate-950 flex items-center justify-center font-black shadow-lg animate-pulse">
-          <i data-lucide="zap" class="w-7 h-7 fill-slate-950"></i>
+<!-- Flash Sale Section (Mobile: Fits 2 Cards Side-by-Side + Smooth Drag & Arrows) -->
+<section id="flashSaleSection" class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 pt-4 sm:pt-6">
+  <div class="flash-sale-wrapper rounded-2xl sm:rounded-3xl p-3 sm:p-5 text-white shadow-flash relative">
+    <div class="flex flex-wrap items-center justify-between gap-2 mb-3 border-b border-white/20 pb-2.5">
+      <div class="flex items-center gap-2.5">
+        <div class="w-9 h-9 sm:w-11 sm:h-11 rounded-xl sm:rounded-2xl bg-amber-400 text-slate-950 flex items-center justify-center font-black shadow-lg animate-pulse">
+          <i data-lucide="zap" class="w-5 h-5 sm:w-7 sm:h-7 fill-slate-950"></i>
         </div>
         <div>
-          <h2 class="font-display font-black text-2xl sm:text-3xl tracking-wide flex items-center gap-2 text-white">
-            FLASH SALE <span class="text-xs sm:text-sm font-bold bg-amber-400 text-slate-950 px-2.5 py-0.5 rounded-md uppercase tracking-normal">ลดแรงจำกัดเวลา</span>
+          <h2 class="font-display font-black text-xl sm:text-2xl lg:text-3xl tracking-wide flex items-center gap-1.5 text-white">
+            FLASH SALE <span class="text-[10px] sm:text-xs font-bold bg-amber-400 text-slate-950 px-2 py-0.5 rounded uppercase tracking-normal">ลดแรงจำกัดเวลา</span>
           </h2>
-          <p class="text-xs sm:text-sm text-red-100 font-light">โปรเด็ดราคาพิเศษ ดีลดีที่สุดประจำวัน</p>
+          <p class="text-[11px] sm:text-xs text-red-100 font-light">โปรเด็ดราคาพิเศษ ดีลดีที่สุดประจำวัน</p>
         </div>
       </div>
       <div class="flex items-center gap-2">
-        <div class="flex items-center gap-1.5 bg-black/30 backdrop-blur px-3 py-1.5 rounded-xl border border-white/10 text-xs font-semibold">
-          <i data-lucide="flame" class="w-4 h-4 text-amber-400"></i>
-          <span class="text-amber-300">ด่วน! สินค้ามีจำนวนจำกัด</span>
+        <div class="flex items-center gap-1 bg-black/30 backdrop-blur px-2.5 py-1 rounded-lg sm:rounded-xl border border-white/10 text-[10px] sm:text-xs font-semibold">
+          <i data-lucide="flame" class="w-3.5 h-3.5 text-amber-400"></i>
+          <span class="text-amber-300">ด่วน! สินค้ามีจำกัด</span>
         </div>
       </div>
     </div>
     
-    <!-- Carousel Area Wrapper with Floating Side Arrows -->
+    <!-- Carousel Track Wrapper with Floating Side Arrows -->
     <div class="relative group/carousel">
-      <!-- Left Floating Arrow Button -->
-      <button id="flashPrevBtn" class="absolute left-1 sm:left-2 top-1/2 -translate-y-1/2 z-30 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-black/30 hover:bg-black/60 backdrop-blur-md border border-white/30 text-white flex items-center justify-center shadow-2xl active:scale-95 transition-all opacity-85 hover:opacity-100" title="เลื่อนไปทางซ้าย">
-        <i data-lucide="chevron-left" class="w-6 h-6 stroke-[2.5]"></i>
+      <!-- Left Floating Arrow -->
+      <button id="flashPrevBtn" class="absolute -left-1 sm:left-1 top-1/2 -translate-y-1/2 z-30 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-black/40 hover:bg-black/70 backdrop-blur-md border border-white/30 text-white flex items-center justify-center shadow-lg active:scale-90 transition-all opacity-85 hover:opacity-100" title="เลื่อนซ้าย">
+        <i data-lucide="chevron-left" class="w-5 h-5 stroke-[2.5]"></i>
       </button>
 
-      <!-- Carousel Track -->
-      <div id="flashSaleContainer" class="flex gap-3 sm:gap-4 overflow-x-auto no-scrollbar scroll-smooth py-1 px-1 sm:px-2 select-none"></div>
+      <!-- Track Container: 2 cards per view on mobile (w-[48%]), 3 on tablet, 4 on desktop -->
+      <div id="flashSaleContainer" class="flex gap-2 sm:gap-3.5 overflow-x-auto no-scrollbar scroll-smooth py-1 px-1 select-none"></div>
 
-      <!-- Right Floating Arrow Button -->
-      <button id="flashNextBtn" class="absolute right-1 sm:right-2 top-1/2 -translate-y-1/2 z-30 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-black/30 hover:bg-black/60 backdrop-blur-md border border-white/30 text-white flex items-center justify-center shadow-2xl active:scale-95 transition-all opacity-85 hover:opacity-100" title="เลื่อนไปทางขวา">
-        <i data-lucide="chevron-right" class="w-6 h-6 stroke-[2.5]"></i>
+      <!-- Right Floating Arrow -->
+      <button id="flashNextBtn" class="absolute -right-1 sm:right-1 top-1/2 -translate-y-1/2 z-30 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-black/40 hover:bg-black/70 backdrop-blur-md border border-white/30 text-white flex items-center justify-center shadow-lg active:scale-90 transition-all opacity-85 hover:opacity-100" title="เลื่อนขวา">
+        <i data-lucide="chevron-right" class="w-5 h-5 stroke-[2.5]"></i>
       </button>
     </div>
     
-    <div id="emptyFlashSale" class="hidden text-center py-10">
-      <p class="text-sm text-red-200 font-medium">ไม่มีสินค้าในรายการ Flash Sale ขณะนี้</p>
+    <div id="emptyFlashSale" class="hidden text-center py-6">
+      <p class="text-xs sm:text-sm text-red-200 font-medium">ไม่มีสินค้าในรายการ Flash Sale ขณะนี้</p>
     </div>
   </div>
 </section>
 
 <!-- Search & Controls -->
-<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
-  <div class="relative mb-4">
+<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+  <div class="relative mb-3.5">
     <i data-lucide="search" class="w-4.5 h-4.5 absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
     <input id="searchInput" type="text" placeholder="ค้นหารุ่นมือถือ, ยี่ห้อ, ความจุ… เช่น iPhone 17 หรือ 256GB"
-      class="w-full h-12 pl-11 pr-10 rounded-2xl border border-slate-200 bg-white shadow-card focus:outline-none focus:ring-2 focus:ring-tw-green/40 focus:border-tw-green text-sm placeholder:text-slate-400" />
+      class="w-full h-11 sm:h-12 pl-11 pr-10 rounded-2xl border border-slate-200 bg-white shadow-card focus:outline-none focus:ring-2 focus:ring-tw-green/40 focus:border-tw-green text-sm placeholder:text-slate-400" />
     <button id="clearSearchBtn" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
       <i data-lucide="x-circle" class="w-5 h-5"></i>
     </button>
@@ -250,8 +248,8 @@
     </button>
   </div>
 
-  <div class="flex items-center justify-between mt-6 mb-2">
-    <h2 class="font-display font-bold text-lg text-slate-800 flex items-center gap-2">
+  <div class="flex items-center justify-between mt-5 mb-2">
+    <h2 class="font-display font-bold text-base sm:text-lg text-slate-800 flex items-center gap-2">
       <i data-lucide="grid" class="w-5 h-5 text-tw-green"></i> รายการสินค้าทั้งหมด
     </h2>
     <p id="resultCount" class="text-xs text-slate-500"></p>
@@ -260,11 +258,11 @@
 
 <!-- Product List -->
 <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
-  <div id="productGrid" class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-5"></div>
-  <div id="emptyState" class="hidden flex-col items-center justify-center text-center py-20">
-    <i data-lucide="search-x" class="w-12 h-12 text-slate-300 mb-3"></i>
+  <div id="productGrid" class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-4"></div>
+  <div id="emptyState" class="hidden flex-col items-center justify-center text-center py-16">
+    <i data-lucide="search-x" class="w-10 h-10 text-slate-300 mb-2"></i>
     <p class="font-display font-semibold text-slate-600">ไม่พบรุ่นที่ค้นหา</p>
-    <p class="text-sm text-slate-400 mt-1">ลองค้นด้วยชื่อรุ่น ยี่ห้อ หรือความจุ</p>
+    <p class="text-xs text-slate-400 mt-1">ลองค้นด้วยชื่อรุ่น ยี่ห้อ หรือความจุ</p>
   </div>
 </main>
 
@@ -565,10 +563,10 @@ function renderBrandTabs() {
     const active = state.activeBrand.toLowerCase() === b.toLowerCase();
     return `
       <button data-brand="${b}" data-active="${active}"
-        class="brand-tab shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium border transition-all
+        class="brand-tab shrink-0 flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-medium border transition-all
         ${active ? 'border-transparent' : 'bg-white border-slate-200 text-slate-600 hover:border-tw-green hover:text-tw-green'}">
         ${label}
-        <span class="brand-count text-[11px] ${active ? '' : 'text-slate-400'}">${brandCount(b)}</span>
+        <span class="brand-count text-[10px] sm:text-[11px] ${active ? '' : 'text-slate-400'}">${brandCount(b)}</span>
       </button>`;
   }).join('');
 
@@ -596,27 +594,26 @@ function getFilteredPhones() {
 }
 
 function specRow(icon, text) {
-  return `<div class="flex items-start gap-1.5 text-[11px] sm:text-xs text-slate-500">
-      <i data-lucide="${icon}" class="w-3.5 h-3.5 mt-0.5 text-slate-400 shrink-0"></i>
+  return `<div class="flex items-start gap-1 text-[10px] sm:text-xs text-slate-500">
+      <i data-lucide="${icon}" class="w-3 h-3 sm:w-3.5 sm:h-3.5 mt-0.5 text-slate-400 shrink-0"></i>
       <span class="line-clamp-1">${text}</span>
     </div>`;
 }
 
-// Storage pills rendered identically as buttons for both single and multiple options
 function storagePills(phone, activeVariant, isFlash = false) {
   const variants = sortedVariants(phone);
   if (!variants.length) return '';
-  return `<div class="flex flex-wrap gap-1.5 mt-2.5" data-storage-group="${phone.id}">
+  return `<div class="flex flex-wrap gap-1 mt-1.5" data-storage-group="${phone.id}">
     ${variants.map(v => `
       <button type="button" data-storage-pill="${phone.id}" data-storage-value="${v.storage}"
         data-active="${v.storage === activeVariant.storage}"
-        class="${isFlash ? 'storage-pill-flash' : 'storage-pill'} text-[10px] font-medium px-2.5 py-1 rounded-lg border border-slate-200 text-slate-600 transition-colors">
+        class="${isFlash ? 'storage-pill-flash' : 'storage-pill'} text-[9px] sm:text-[10px] font-medium px-2 py-0.5 rounded border border-slate-200 text-slate-600 transition-colors">
         ${v.storage}
       </button>`).join('')}
   </div>`;
 }
 
-// Flash Sale Product Card (With shimmering flash badge)
+// Flash Sale Product Card (Compact Mobile view: w-[48%] so 2 items fit on screen)
 function flashSaleCard(p) {
   const activeVariant = getSelectedVariant(p);
   const hasPromo = activeVariant.promo && activeVariant.promo > 0 && activeVariant.promo < activeVariant.price;
@@ -625,67 +622,67 @@ function flashSaleCard(p) {
   const discountPercent = hasPromo ? Math.round((1 - activeVariant.promo / activeVariant.price) * 100) : 0;
 
   const adminControls = state.isAdmin ? `
-    <div class="mt-3 pt-3 border-t border-red-100 space-y-2 text-tw-ink">
+    <div class="mt-2 pt-2 border-t border-red-100 space-y-1.5 text-tw-ink">
       <div class="flex items-center justify-between">
-        <p class="text-[11px] text-slate-500 font-medium">${activeVariant.storage}</p>
-        <button data-toggle-flash="${p.id}" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-red-100 text-red-600 hover:bg-red-200">
+        <p class="text-[10px] text-slate-500 font-medium">${activeVariant.storage}</p>
+        <button data-toggle-flash="${p.id}" class="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-red-100 text-red-600 hover:bg-red-200">
           นำออกจาก Flash
         </button>
       </div>
-      <div class="grid grid-cols-2 gap-1.5">
+      <div class="grid grid-cols-2 gap-1">
         <div>
-          <span class="text-[10px] text-slate-400">ราคาปกติ</span>
+          <span class="text-[9px] text-slate-400">ราคาปกติ</span>
           <input type="number" min="0" value="${activeVariant.price}" data-price-input="${p.id}" data-storage-key="${activeVariant.storage}"
-            class="w-full h-7 px-1.5 text-xs rounded border border-slate-200" />
+            class="w-full h-6 px-1 text-[10px] rounded border border-slate-200" />
         </div>
         <div>
-          <span class="text-[10px] text-red-500 font-medium">Flash Price</span>
+          <span class="text-[9px] text-red-500 font-medium">Flash Price</span>
           <input type="number" min="0" value="${activeVariant.promo ?? ''}" placeholder="ใส่ราคาลด" data-promo-input="${p.id}" data-storage-key="${activeVariant.storage}"
-            class="w-full h-7 px-1.5 text-xs rounded border border-red-300 bg-red-50/50" />
+            class="w-full h-6 px-1 text-[10px] rounded border border-red-300 bg-red-50/50" />
         </div>
       </div>
     </div>` : '';
 
   return `
-  <div class="w-[78%] sm:w-[48%] md:w-[32%] lg:w-[calc(25%-12px)] shrink-0 flash-card-border bg-white rounded-2xl shadow-lg p-3 sm:p-4 flex flex-col justify-between text-slate-900 select-none ${!p.inStock ? 'opacity-75' : ''}">
+  <div class="w-[48%] sm:w-[32%] lg:w-[calc(25%-11px)] shrink-0 flash-card-border bg-white rounded-xl sm:rounded-2xl shadow-md p-2 sm:p-3.5 flex flex-col justify-between text-slate-900 select-none ${!p.inStock ? 'opacity-75' : ''}">
     <div>
-      <div class="relative aspect-square rounded-xl overflow-hidden bg-slate-50 mb-3 pointer-events-none">
+      <div class="relative aspect-square rounded-lg sm:rounded-xl overflow-hidden bg-slate-50 mb-1.5 pointer-events-none">
         <img src="${p.image}" alt="${p.model}" loading="lazy" class="w-full h-full object-cover" />
         
-        <!-- Shimmering Flash Sale Badge -->
-        <span class="flash-badge-corner flash-shimmer-badge absolute top-0 left-0 text-white font-black text-[10px] sm:text-xs pl-2 pr-4 py-1 flex items-center gap-1 shadow">
-          <i data-lucide="zap" class="w-3 h-3 fill-amber-300 text-amber-300"></i> FLASH SALE
+        <!-- Clean Tag on Top Left -->
+        <span class="flash-badge-corner flash-shimmer-badge absolute top-0 left-0 text-white font-black text-[9px] sm:text-[10px] pl-1.5 pr-3 py-0.5 flex items-center gap-0.5 shadow">
+          <i data-lucide="zap" class="w-2.5 h-2.5 fill-amber-300 text-amber-300"></i> FLASH SALE
         </span>
 
         ${discountPercent > 0 ? `
-          <div class="absolute top-2 right-2 bg-amber-400 text-slate-950 font-black text-xs px-2 py-1 rounded-lg shadow-md flex flex-col items-center leading-none">
-            <span class="text-[9px] font-bold">ลด</span>
+          <div class="absolute top-1 right-1 bg-amber-400 text-slate-950 font-black text-[9px] sm:text-[10px] px-1.5 py-0.5 rounded shadow flex items-center gap-0.5 leading-none">
+            <span>ลด</span>
             <span>${discountPercent}%</span>
           </div>` : ''}
 
-        ${!p.inStock ? '<span class="absolute inset-0 bg-black/60 backdrop-blur-[1px] flex items-center justify-center"><span class="text-xs font-bold bg-white text-red-600 px-3 py-1 rounded-full shadow">สินค้าหมด</span></span>' : ''}
+        ${!p.inStock ? '<span class="absolute inset-0 bg-black/60 backdrop-blur-[1px] flex items-center justify-center"><span class="text-[10px] font-bold bg-white text-red-600 px-2 py-0.5 rounded-full shadow">สินค้าหมด</span></span>' : ''}
       </div>
 
-      <span class="text-[11px] font-semibold text-red-600 uppercase tracking-wide">${p.brand}</span>
-      <h3 class="font-display font-bold text-sm sm:text-base text-slate-900 leading-snug line-clamp-2 min-h-[2.4em]">${p.model}</h3>
+      <span class="text-[9px] sm:text-[10px] font-semibold text-red-600 uppercase tracking-wide block">${p.brand}</span>
+      <h3 class="font-display font-bold text-xs sm:text-sm text-slate-900 leading-snug line-clamp-1 mt-0.5">${p.model}</h3>
 
       ${storagePills(p, activeVariant, true)}
     </div>
 
-    <div class="mt-4 pt-3 border-t border-slate-100">
+    <div class="mt-2 pt-2 border-t border-slate-100">
       <div class="flex items-baseline justify-between gap-1">
-        <span class="text-[11px] text-slate-400">ราคาปกติ:</span>
-        <span class="price-strike text-xs sm:text-sm text-slate-400 font-medium">฿${thb(originalPrice)}</span>
+        <span class="text-[9px] sm:text-[10px] text-slate-400">ราคาปกติ:</span>
+        <span class="price-strike text-[10px] sm:text-xs text-slate-400 font-medium">฿${thb(originalPrice)}</span>
       </div>
       
       <div class="flex items-end justify-between gap-1 mt-0.5">
         <div>
-          <span class="text-[10px] font-bold text-red-600 uppercase">ราคาพิเศษ</span>
-          <div class="font-display font-black text-red-600 text-2xl sm:text-3xl leading-none tracking-tight">
+          <span class="text-[8px] sm:text-[9px] font-bold text-red-600 uppercase block">ราคาพิเศษ</span>
+          <div class="font-display font-black text-red-600 text-base sm:text-xl lg:text-2xl leading-none tracking-tight">
             ฿${thb(salePrice)}
           </div>
         </div>
-        ${!state.isAdmin ? `<span class="text-[10px] font-bold px-2.5 py-1 rounded-md ${p.inStock ? 'bg-red-50 text-red-600 border border-red-200' : 'bg-slate-100 text-slate-400'}">${p.inStock ? 'ดีลเด็ด' : 'หมด'}</span>` : ''}
+        ${!state.isAdmin ? `<span class="text-[8px] sm:text-[9px] font-bold px-1.5 py-0.5 rounded ${p.inStock ? 'bg-red-50 text-red-600 border border-red-200' : 'bg-slate-100 text-slate-400'}">${p.inStock ? 'ดีลเด็ด' : 'หมด'}</span>` : ''}
       </div>
 
       ${adminControls}
@@ -693,67 +690,68 @@ function flashSaleCard(p) {
   </div>`;
 }
 
-// Standard Product Card (With Flash Sale Tag Indicator & Unified Storage Buttons)
+// Standard Product Card (Clean tags: Brand left, Discount right, Flash badge in-between with proper spacing)
 function standardProductCard(p) {
   const activeVariant = getSelectedVariant(p);
   const hasPromo = activeVariant.promo && activeVariant.promo > 0 && activeVariant.promo < activeVariant.price;
   const displayPrice = hasPromo ? activeVariant.promo : activeVariant.price;
 
   const adminControls = state.isAdmin ? `
-    <div class="mt-3 pt-3 border-t border-slate-100 space-y-2">
+    <div class="mt-2.5 pt-2.5 border-t border-slate-100 space-y-1.5">
       <div class="flex items-center justify-between">
-        <p class="text-[11px] text-slate-400">แก้ไข <span class="font-medium text-tw-ink">${activeVariant.storage}</span></p>
-        <button data-toggle-flash="${p.id}" class="text-[10px] font-medium px-2 py-0.5 rounded-full border ${p.isFlashSale ? 'bg-red-50 border-red-300 text-red-600' : 'bg-slate-50 border-slate-200 text-slate-500'}">
-          ${p.isFlashSale ? '⚡ อยู่ใน Flash Sale' : '+ เพิ่มเข้า Flash Sale'}
+        <p class="text-[10px] text-slate-400">แก้ไข <span class="font-medium text-tw-ink">${activeVariant.storage}</span></p>
+        <button data-toggle-flash="${p.id}" class="text-[9px] font-medium px-1.5 py-0.5 rounded-full border ${p.isFlashSale ? 'bg-red-50 border-red-300 text-red-600' : 'bg-slate-50 border-slate-200 text-slate-500'}">
+          ${p.isFlashSale ? '⚡ ใน Flash Sale' : '+ ใส่ Flash Sale'}
         </button>
       </div>
-      <div class="flex items-center gap-1.5">
-        <span class="text-[11px] text-slate-400 w-16 shrink-0">ราคาปกติ</span>
-        <div class="relative flex-1">
-          <span class="absolute left-2 top-1/2 -translate-y-1/2 text-[11px] text-slate-400">฿</span>
-          <input type="number" min="0" value="${activeVariant.price}" data-price-input="${p.id}" data-storage-key="${activeVariant.storage}"
-            class="w-full h-8 pl-5 pr-2 text-xs rounded-lg border border-slate-200 focus:outline-none focus:ring-1 focus:ring-tw-green" />
-        </div>
+      <div class="flex items-center gap-1">
+        <span class="text-[10px] text-slate-400 w-12 shrink-0">ปกติ</span>
+        <input type="number" min="0" value="${activeVariant.price}" data-price-input="${p.id}" data-storage-key="${activeVariant.storage}"
+          class="flex-1 h-6 px-1.5 text-[10px] rounded border border-slate-200 focus:outline-none focus:ring-1 focus:ring-tw-green" />
       </div>
-      <div class="flex items-center gap-1.5">
-        <span class="text-[11px] text-slate-400 w-16 shrink-0">ราคาโปร</span>
-        <div class="relative flex-1">
-          <span class="absolute left-2 top-1/2 -translate-y-1/2 text-[11px] text-slate-400">฿</span>
-          <input type="number" min="0" value="${activeVariant.promo ?? ''}" placeholder="ไม่มีโปร" data-promo-input="${p.id}" data-storage-key="${activeVariant.storage}"
-            class="w-full h-8 pl-5 pr-2 text-xs rounded-lg border border-slate-200 focus:outline-none focus:ring-1 focus:ring-tw-green" />
-        </div>
+      <div class="flex items-center gap-1">
+        <span class="text-[10px] text-slate-400 w-12 shrink-0">โปร</span>
+        <input type="number" min="0" value="${activeVariant.promo ?? ''}" placeholder="ไม่มีโปร" data-promo-input="${p.id}" data-storage-key="${activeVariant.storage}"
+          class="flex-1 h-6 px-1.5 text-[10px] rounded border border-slate-200 focus:outline-none focus:ring-1 focus:ring-tw-green" />
       </div>
-      <div class="flex items-center gap-1.5 pt-0.5">
-        <button data-toggle-stock="${p.id}" class="flex-1 h-8 text-[11px] font-medium rounded-lg border ${p.inStock ? 'border-emerald-200 bg-emerald-50 text-emerald-600' : 'border-red-200 bg-red-50 text-red-500'}">
+      <div class="flex items-center gap-1 pt-0.5">
+        <button data-toggle-stock="${p.id}" class="flex-1 h-6 text-[10px] font-medium rounded border ${p.inStock ? 'border-emerald-200 bg-emerald-50 text-emerald-600' : 'border-red-200 bg-red-50 text-red-500'}">
           ${p.inStock ? 'มีสินค้า' : 'สินค้าหมด'}
         </button>
-        <button data-edit="${p.id}" class="h-8 w-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-500 hover:text-tw-green hover:border-tw-green" title="แก้ไขข้อมูล">
-          <i data-lucide="pencil" class="w-3.5 h-3.5"></i>
+        <button data-edit="${p.id}" class="h-6 w-6 flex items-center justify-center rounded border border-slate-200 text-slate-500 hover:text-tw-green" title="แก้ไขข้อมูล">
+          <i data-lucide="pencil" class="w-3 h-3"></i>
         </button>
-        <button data-delete="${p.id}" class="h-8 w-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-500 hover:text-red-500 hover:border-red-300">
-          <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+        <button data-delete="${p.id}" class="h-6 w-6 flex items-center justify-center rounded border border-slate-200 text-slate-500 hover:text-red-500" title="ลบ">
+          <i data-lucide="trash-2" class="w-3 h-3"></i>
         </button>
       </div>
     </div>` : '';
 
   return `
-  <article class="sim-card group bg-white rounded-2xl border ${p.isFlashSale ? 'border-red-200 ring-1 ring-red-100' : 'border-slate-200'} shadow-card hover:shadow-cardHover transition-shadow p-3 sm:p-4 fade-in flex flex-col ${!p.inStock ? 'opacity-70' : ''}">
-    <div class="relative aspect-square rounded-xl overflow-hidden bg-slate-50 mb-3">
+  <article class="sim-card group bg-white rounded-xl sm:rounded-2xl border ${p.isFlashSale ? 'border-red-200 ring-1 ring-red-100' : 'border-slate-200'} shadow-card hover:shadow-cardHover transition-shadow p-2.5 sm:p-3.5 fade-in flex flex-col ${!p.inStock ? 'opacity-70' : ''}">
+    <div class="relative aspect-square rounded-lg sm:rounded-xl overflow-hidden bg-slate-50 mb-2">
       <img src="${p.image}" alt="${p.model}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
       
-      <!-- Brand & Flash Badge on Top Left -->
-      <div class="absolute top-2 left-2 flex flex-col gap-1 items-start">
-        <span class="text-[10px] font-medium px-2 py-0.5 rounded-full bg-white/90 backdrop-blur text-slate-600 shadow-sm">${p.brand}</span>
-        ${p.isFlashSale ? '<span class="text-[9px] font-bold px-2 py-0.5 rounded-md flash-shimmer-badge text-white shadow-sm flex items-center gap-1"><i data-lucide="zap" class="w-2.5 h-2.5 fill-amber-300 text-amber-300"></i> FLASH SALE</span>' : ''}
-      </div>
+      <!-- Brand Tag (Top Left) -->
+      <span class="absolute top-1.5 left-1.5 text-[9px] sm:text-[10px] font-medium px-1.5 py-0.5 rounded-md bg-white/90 backdrop-blur text-slate-600 shadow-sm">${p.brand}</span>
 
-      ${!p.inStock ? '<span class="absolute inset-0 bg-white/40 flex items-center justify-center"><span class="text-[11px] font-semibold bg-slate-800 text-white px-3 py-1 rounded-full">สินค้าหมด</span></span>' : ''}
-      ${hasPromo ? `<span class="absolute top-2 right-2 text-[10px] font-semibold px-2 py-0.5 rounded-full ${p.isFlashSale ? 'bg-red-600' : 'bg-red-500'} text-white shadow-sm">ลด ${Math.round((1-activeVariant.promo/activeVariant.price)*100)}%</span>` : ''}
+      <!-- Discount Tag (Top Right) -->
+      ${hasPromo ? `<span class="absolute top-1.5 right-1.5 text-[9px] sm:text-[10px] font-semibold px-1.5 py-0.5 rounded-md ${p.isFlashSale ? 'bg-red-600' : 'bg-red-500'} text-white shadow-sm">ลด ${Math.round((1-activeVariant.promo/activeVariant.price)*100)}%</span>` : ''}
+
+      ${!p.inStock ? '<span class="absolute inset-0 bg-white/40 flex items-center justify-center"><span class="text-[10px] sm:text-xs font-semibold bg-slate-800 text-white px-2.5 py-0.5 rounded-full">สินค้าหมด</span></span>' : ''}
     </div>
 
-    <h3 class="font-display font-semibold text-sm sm:text-base text-tw-ink leading-tight line-clamp-2 min-h-[2.5em]">${p.model}</h3>
+    <!-- Centered Flash Sale Badge between image and title -->
+    ${p.isFlashSale ? `
+      <div class="mb-1">
+        <span class="inline-flex items-center gap-1 text-[9px] font-bold px-2 py-0.5 rounded-md flash-shimmer-badge text-white shadow-sm">
+          <i data-lucide="zap" class="w-2.5 h-2.5 fill-amber-300 text-amber-300"></i> FLASH SALE
+        </span>
+      </div>` : ''}
 
-    <div class="mt-2 space-y-1">
+    <h3 class="font-display font-semibold text-xs sm:text-sm text-tw-ink leading-tight line-clamp-1">${p.model}</h3>
+
+    <div class="mt-1.5 space-y-0.5">
       ${specRow('smartphone', p.specs.display)}
       ${specRow('cpu', p.specs.chipset)}
       ${specRow('camera', p.specs.camera)}
@@ -762,12 +760,12 @@ function standardProductCard(p) {
 
     ${storagePills(p, activeVariant, false)}
 
-    <div class="mt-auto pt-3 flex items-end justify-between gap-2">
+    <div class="mt-auto pt-2.5 flex items-end justify-between gap-1.5">
       <div>
-        ${hasPromo ? `<p class="price-strike text-[11px] text-slate-400">฿${thb(activeVariant.price)}</p>` : ''}
-        <p class="font-display font-bold ${p.isFlashSale ? 'text-red-600' : 'text-tw-green'} text-base sm:text-lg leading-none">฿${thb(displayPrice)}</p>
+        ${hasPromo ? `<p class="price-strike text-[10px] text-slate-400 leading-none">฿${thb(activeVariant.price)}</p>` : ''}
+        <p class="font-display font-bold ${p.isFlashSale ? 'text-red-600' : 'text-tw-green'} text-sm sm:text-base leading-none mt-0.5">฿${thb(displayPrice)}</p>
       </div>
-      ${!state.isAdmin ? `<span class="text-[10px] font-medium px-2.5 py-1.5 rounded-lg ${p.inStock ? (p.isFlashSale ? 'bg-red-50 text-red-600 font-semibold' : 'bg-emerald-50 text-emerald-600') : 'bg-slate-100 text-slate-400'}">${p.inStock ? (p.isFlashSale ? 'ดีลเด็ด' : 'พร้อมส่ง') : 'หมด'}</span>` : ''}
+      ${!state.isAdmin ? `<span class="text-[9px] sm:text-[10px] font-medium px-2 py-1 rounded-md ${p.inStock ? (p.isFlashSale ? 'bg-red-50 text-red-600 font-semibold' : 'bg-emerald-50 text-emerald-600') : 'bg-slate-100 text-slate-400'}">${p.inStock ? (p.isFlashSale ? 'ดีลเด็ด' : 'พร้อมส่ง') : 'หมด'}</span>` : ''}
     </div>
 
     ${adminControls}
@@ -801,10 +799,10 @@ function startFlashAutoPlay() {
     if (container.scrollLeft >= maxScroll - 10) {
       container.scrollTo({ left: 0, behavior: 'smooth' });
     } else {
-      const scrollStep = container.querySelector('.flash-card-border')?.clientWidth || 260;
-      container.scrollBy({ left: scrollStep + 16, behavior: 'smooth' });
+      const scrollStep = container.querySelector('.flash-card-border')?.clientWidth || 160;
+      container.scrollBy({ left: scrollStep + 10, behavior: 'smooth' });
     }
-  }, 3000);
+  }, 3200);
 }
 
 function stopFlashAutoPlay() {
@@ -814,7 +812,7 @@ function stopFlashAutoPlay() {
   }
 }
 
-// Enhanced Smooth Drag-to-Scroll + Touch + Button controls
+// Full Finger Touch Drag + Mouse Drag + Arrow Click Controls
 function bindFlashControls() {
   const container = $('flashSaleContainer');
   const prevBtn = $('flashPrevBtn');
@@ -825,19 +823,21 @@ function bindFlashControls() {
     stopFlashAutoPlay();
   }
 
-  prevBtn.onclick = () => {
+  prevBtn.onclick = (e) => {
+    e.stopPropagation();
     userInteracted();
-    const itemWidth = container.querySelector('.flash-card-border')?.clientWidth || 280;
-    container.scrollBy({ left: -(itemWidth + 16), behavior: 'smooth' });
+    const itemWidth = container.querySelector('.flash-card-border')?.clientWidth || 180;
+    container.scrollBy({ left: -(itemWidth + 10), behavior: 'smooth' });
   };
 
-  nextBtn.onclick = () => {
+  nextBtn.onclick = (e) => {
+    e.stopPropagation();
     userInteracted();
-    const itemWidth = container.querySelector('.flash-card-border')?.clientWidth || 280;
-    container.scrollBy({ left: itemWidth + 16, behavior: 'smooth' });
+    const itemWidth = container.querySelector('.flash-card-border')?.clientWidth || 180;
+    container.scrollBy({ left: itemWidth + 10, behavior: 'smooth' });
   };
 
-  // Mouse Drag to Scroll
+  // Mouse Drag Support
   let isDown = false;
   let startX = 0;
   let scrollLeftPos = 0;
@@ -861,11 +861,11 @@ function bindFlashControls() {
     if (!isDown) return;
     e.preventDefault();
     const x = e.pageX - container.offsetLeft;
-    const walk = (x - startX) * 1.6;
+    const walk = (x - startX) * 1.5;
     container.scrollLeft = scrollLeftPos - walk;
   });
 
-  // Touch Support for mobile / iPad / notebooks
+  // Touch Swipe on Mobile/Tablet
   container.addEventListener('touchstart', () => {
     userInteracted();
   }, { passive: true });
