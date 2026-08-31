@@ -1,0 +1,1286 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Telewiz (สาขาสองพี่น้อง) — ร้านมือถือครบวงจร</title>
+<meta name="description" content="Telewiz สาขาสองพี่น้อง จำหน่ายมือถือ Apple, Samsung, Vivo, OPPO และแบรนด์ชั้นนำ ราคาดีที่สุด" />
+
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@500;600;700;800;900&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- Lucide Icons -->
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: {
+          display: ['Kanit', 'sans-serif'],
+          body: ['Prompt', 'sans-serif'],
+        },
+        colors: {
+          tw: {
+            green: '#16a34a',
+            greenLight: '#22c55e',
+            ink: '#0f172a',
+          }
+        },
+        boxShadow: {
+          card: '0 1px 2px rgba(15,23,42,.04), 0 8px 24px -12px rgba(15,23,42,.12)',
+          cardHover: '0 8px 16px -4px rgba(15,23,42,.08), 0 24px 48px -16px rgba(15,23,42,.18)',
+          flash: '0 10px 30px -5px rgba(220, 38, 38, 0.4)',
+        }
+      }
+    }
+  }
+</script>
+
+<style>
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Prompt', sans-serif; background:#f8faf9; }
+  h1,h2,h3,.font-display { font-family: 'Kanit', sans-serif; }
+  .sim-card { position: relative; clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 0 100%); }
+  ::-webkit-scrollbar { height: 6px; width: 8px; }
+  ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 99px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  .brand-tab[data-active="true"] { background: #16a34a; color: white; box-shadow: 0 6px 16px -6px rgba(22,163,74,.55); }
+  .brand-tab[data-active="true"] .brand-count { color: rgba(255,255,255,.85); }
+  .storage-pill[data-active="true"] { background: #0f172a; color: #fff; border-color: #0f172a; }
+  .storage-pill-flash[data-active="true"] { background: #dc2626; color: #fff; border-color: #dc2626; }
+  .fade-in { animation: fadeIn .35s ease both; }
+  @keyframes fadeIn { from { opacity:0; transform: translateY(6px);} to {opacity:1; transform:none;} }
+  .toast { animation: toastIn .25s ease both; }
+  @keyframes toastIn { from{opacity:0; transform:translateY(12px) scale(.96);} to{opacity:1; transform:none;} }
+  input[type="number"]::-webkit-inner-spin-button { opacity: 1; }
+  .badge-guest { background:#eef2f7; color:#334155; }
+  .badge-admin { background:#0f172a; color:#fff; }
+  .price-strike { text-decoration: line-through; }
+  [data-modal-backdrop] { backdrop-filter: blur(2px); }
+
+  .flash-sale-wrapper {
+    background: linear-gradient(135deg, #991b1b 0%, #dc2626 50%, #ea580c 100%);
+    position: relative;
+    overflow: hidden;
+  }
+  .flash-card-border {
+    position: relative;
+    border: 2px solid #fee2e2;
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.2s ease;
+    user-select: none;
+  }
+  .flash-card-border:hover {
+    border-color: #ef4444;
+    transform: translateY(-4px);
+  }
+  .flash-badge-corner {
+    clip-path: polygon(0 0, 100% 0, 85% 100%, 0% 100%);
+  }
+
+  /* Shimmer / Glow Animation on Flash Sale Badge */
+  .flash-shimmer-badge {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, #dc2626 0%, #ef4444 50%, #f43f5e 100%);
+  }
+  .flash-shimmer-badge::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -150%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+    transform: skewX(-25deg);
+    animation: flashShimmer 2.4s infinite ease-in-out;
+  }
+  @keyframes flashShimmer {
+    0% { left: -150%; }
+    50%, 100% { left: 200%; }
+  }
+
+  /* Smooth Grab & Dragging Styles */
+  #flashSaleContainer {
+    cursor: grab;
+    user-select: none;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y pinch-zoom;
+  }
+  #flashSaleContainer.is-dragging {
+    cursor: grabbing;
+    scroll-behavior: auto !important;
+  }
+  #flashSaleContainer img {
+    -webkit-user-drag: none;
+    user-select: none;
+  }
+</style>
+</head>
+
+<body class="min-h-screen text-tw-ink antialiased">
+
+<!-- Header -->
+<header class="sticky top-0 z-40 bg-white/90 backdrop-blur border-b border-slate-200">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16 gap-3">
+      <div class="flex items-center gap-2.5 min-w-0">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-tw-greenLight to-tw-green flex items-center justify-center shrink-0 shadow-card">
+          <i data-lucide="smartphone" class="w-5 h-5 text-white"></i>
+        </div>
+        <div class="min-w-0 leading-tight">
+          <h1 class="font-display font-bold text-lg sm:text-xl text-tw-ink truncate">Telewiz</h1>
+          <p class="text-[11px] sm:text-xs text-slate-500 -mt-0.5 truncate">สาขาสองพี่น้อง</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2 sm:gap-3">
+        <span id="roleBadge" class="badge-guest hidden sm:inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full transition-colors">
+          <i data-lucide="eye" class="w-3.5 h-3.5"></i>
+          Guest Mode (ชมสินค้า)
+        </span>
+        <button id="adminToggleBtn" class="flex items-center gap-1.5 text-sm font-medium px-3.5 py-2 rounded-xl border border-slate-200 hover:border-tw-green hover:text-tw-green transition-colors bg-white">
+          <i data-lucide="lock" class="w-4 h-4"></i>
+          <span class="hidden sm:inline">เข้าสู่ระบบแอดมิน</span>
+        </button>
+      </div>
+    </div>
+    <div class="sm:hidden pb-2 -mt-1">
+      <span id="roleBadgeMobile" class="badge-guest inline-flex items-center gap-1.5 text-[11px] font-medium px-2.5 py-1 rounded-full transition-colors">
+        <i data-lucide="eye" class="w-3.5 h-3.5"></i>
+        Guest Mode (ชมสินค้า)
+      </span>
+    </div>
+  </div>
+</header>
+
+<!-- Banner -->
+<section class="bg-gradient-to-r from-tw-green to-emerald-500 text-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 sm:py-4 flex flex-wrap items-center justify-between gap-2">
+    <p class="font-display font-medium text-sm sm:text-base flex items-center gap-2">
+      <i data-lucide="badge-percent" class="w-4 h-4"></i>
+      มือถือแท้ ประกันศูนย์ไทย ผ่อน 0% สูงสุด 10 เดือน
+    </p>
+    <p class="text-xs sm:text-sm text-white/90 flex items-center gap-1.5">
+      <i data-lucide="radio" class="w-3.5 h-3.5 animate-pulse text-emerald-200"></i>
+      Live Cloud Sync (อัปเดตเรียลไทม์)
+    </p>
+  </div>
+</section>
+
+<!-- Flash Sale Section (With Floating Side Arrows) -->
+<section id="flashSaleSection" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+  <div class="flash-sale-wrapper rounded-3xl p-4 sm:p-6 text-white shadow-flash relative">
+    <div class="flex flex-wrap items-center justify-between gap-3 mb-4 border-b border-white/20 pb-4">
+      <div class="flex items-center gap-3">
+        <div class="w-11 h-11 rounded-2xl bg-amber-400 text-slate-950 flex items-center justify-center font-black shadow-lg animate-pulse">
+          <i data-lucide="zap" class="w-7 h-7 fill-slate-950"></i>
+        </div>
+        <div>
+          <h2 class="font-display font-black text-2xl sm:text-3xl tracking-wide flex items-center gap-2 text-white">
+            FLASH SALE <span class="text-xs sm:text-sm font-bold bg-amber-400 text-slate-950 px-2.5 py-0.5 rounded-md uppercase tracking-normal">ลดแรงจำกัดเวลา</span>
+          </h2>
+          <p class="text-xs sm:text-sm text-red-100 font-light">โปรเด็ดราคาพิเศษ ดีลดีที่สุดประจำวัน</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <div class="flex items-center gap-1.5 bg-black/30 backdrop-blur px-3 py-1.5 rounded-xl border border-white/10 text-xs font-semibold">
+          <i data-lucide="flame" class="w-4 h-4 text-amber-400"></i>
+          <span class="text-amber-300">ด่วน! สินค้ามีจำนวนจำกัด</span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Carousel Area Wrapper with Floating Side Arrows -->
+    <div class="relative group/carousel">
+      <!-- Left Floating Arrow Button -->
+      <button id="flashPrevBtn" class="absolute left-1 sm:left-2 top-1/2 -translate-y-1/2 z-30 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-black/30 hover:bg-black/60 backdrop-blur-md border border-white/30 text-white flex items-center justify-center shadow-2xl active:scale-95 transition-all opacity-85 hover:opacity-100" title="เลื่อนไปทางซ้าย">
+        <i data-lucide="chevron-left" class="w-6 h-6 stroke-[2.5]"></i>
+      </button>
+
+      <!-- Carousel Track -->
+      <div id="flashSaleContainer" class="flex gap-3 sm:gap-4 overflow-x-auto no-scrollbar scroll-smooth py-1 px-1 sm:px-2 select-none"></div>
+
+      <!-- Right Floating Arrow Button -->
+      <button id="flashNextBtn" class="absolute right-1 sm:right-2 top-1/2 -translate-y-1/2 z-30 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-black/30 hover:bg-black/60 backdrop-blur-md border border-white/30 text-white flex items-center justify-center shadow-2xl active:scale-95 transition-all opacity-85 hover:opacity-100" title="เลื่อนไปทางขวา">
+        <i data-lucide="chevron-right" class="w-6 h-6 stroke-[2.5]"></i>
+      </button>
+    </div>
+    
+    <div id="emptyFlashSale" class="hidden text-center py-10">
+      <p class="text-sm text-red-200 font-medium">ไม่มีสินค้าในรายการ Flash Sale ขณะนี้</p>
+    </div>
+  </div>
+</section>
+
+<!-- Search & Controls -->
+<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+  <div class="relative mb-4">
+    <i data-lucide="search" class="w-4.5 h-4.5 absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+    <input id="searchInput" type="text" placeholder="ค้นหารุ่นมือถือ, ยี่ห้อ, ความจุ… เช่น iPhone 17 หรือ 256GB"
+      class="w-full h-12 pl-11 pr-10 rounded-2xl border border-slate-200 bg-white shadow-card focus:outline-none focus:ring-2 focus:ring-tw-green/40 focus:border-tw-green text-sm placeholder:text-slate-400" />
+    <button id="clearSearchBtn" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+      <i data-lucide="x-circle" class="w-5 h-5"></i>
+    </button>
+  </div>
+
+  <div class="flex items-center gap-2 overflow-x-auto pb-1 -mx-4 px-4 sm:mx-0 sm:px-0 sm:flex-wrap" id="brandTabs"></div>
+
+  <div id="adminBar" class="hidden mt-4 flex flex-wrap items-center gap-2 bg-tw-ink text-white rounded-2xl px-4 py-3">
+    <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400 shrink-0"></i>
+    <span class="text-sm font-medium mr-auto">โหมดแอดมิน: จัดการข้อมูล ราคา และโปรโมชั่น</span>
+    <button id="addPhoneBtn" class="flex items-center gap-1.5 text-xs font-medium bg-tw-green hover:bg-tw-greenLight transition-colors px-3 py-2 rounded-lg">
+      <i data-lucide="plus" class="w-3.5 h-3.5"></i> เพิ่มรุ่นใหม่
+    </button>
+    <button id="changePinBtn" class="flex items-center gap-1.5 text-xs font-medium bg-white/10 hover:bg-white/20 transition-colors px-3 py-2 rounded-lg">
+      <i data-lucide="key" class="w-3.5 h-3.5"></i> เปลี่ยน PIN แอดมิน
+    </button>
+    <button id="resetPricesBtn" class="flex items-center gap-1.5 text-xs font-medium bg-white/10 hover:bg-white/20 transition-colors px-3 py-2 rounded-lg">
+      <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> รีเซ็ตค่าเริ่มต้น
+    </button>
+    <button id="logoutAdminBtn" class="flex items-center gap-1.5 text-xs font-medium bg-white/10 hover:bg-white/20 transition-colors px-3 py-2 rounded-lg">
+      <i data-lucide="log-out" class="w-3.5 h-3.5"></i> ออกจากระบบ
+    </button>
+  </div>
+
+  <div class="flex items-center justify-between mt-6 mb-2">
+    <h2 class="font-display font-bold text-lg text-slate-800 flex items-center gap-2">
+      <i data-lucide="grid" class="w-5 h-5 text-tw-green"></i> รายการสินค้าทั้งหมด
+    </h2>
+    <p id="resultCount" class="text-xs text-slate-500"></p>
+  </div>
+</section>
+
+<!-- Product List -->
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
+  <div id="productGrid" class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-5"></div>
+  <div id="emptyState" class="hidden flex-col items-center justify-center text-center py-20">
+    <i data-lucide="search-x" class="w-12 h-12 text-slate-300 mb-3"></i>
+    <p class="font-display font-semibold text-slate-600">ไม่พบรุ่นที่ค้นหา</p>
+    <p class="text-sm text-slate-400 mt-1">ลองค้นด้วยชื่อรุ่น ยี่ห้อ หรือความจุ</p>
+  </div>
+</main>
+
+<footer class="border-t border-slate-200 bg-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center">
+    <p class="font-display font-semibold text-tw-ink">Telewiz <span class="text-slate-400 font-normal">สาขาสองพี่น้อง</span></p>
+    <p class="text-xs text-slate-400 mt-1">ราคาสินค้าอาจมีการเปลี่ยนแปลงโดยไม่ต้องแจ้งให้ทราบล่วงหน้า</p>
+  </div>
+</footer>
+
+<!-- PIN Login Modal -->
+<div id="pinModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50" data-modal-backdrop>
+  <div class="bg-white w-full max-w-xs rounded-3xl shadow-2xl p-6 fade-in">
+    <div class="flex justify-between items-start mb-4">
+      <div class="w-11 h-11 rounded-2xl bg-tw-ink flex items-center justify-center">
+        <i data-lucide="lock-keyhole" class="w-5 h-5 text-white"></i>
+      </div>
+      <button id="closePinModal" class="text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-5 h-5"></i></button>
+    </div>
+    <h3 class="font-display font-semibold text-lg">เข้าสู่ระบบแอดมิน</h3>
+    <p class="text-xs text-slate-500 mt-1 mb-4">กรอกรหัส PIN 6 หลักเพื่อจัดการระบบ</p>
+    <form id="pinForm">
+      <input id="pinInput" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="off"
+        class="w-full h-14 text-center text-2xl tracking-[0.4em] rounded-2xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-tw-green/40 focus:border-tw-green font-mono" placeholder="••••••" />
+      <p id="pinError" class="hidden text-xs text-red-500 mt-2 text-center">รหัส PIN ไม่ถูกต้อง ลองอีกครั้ง</p>
+      <button type="submit" class="mt-4 w-full h-12 rounded-2xl bg-tw-green hover:bg-tw-greenLight text-white font-medium transition-colors flex items-center justify-center gap-2">
+        <i data-lucide="log-in" class="w-4 h-4"></i> เข้าสู่ระบบ
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- Change PIN Modal -->
+<div id="changePinModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50" data-modal-backdrop>
+  <div class="bg-white w-full max-w-xs rounded-3xl shadow-2xl p-6 fade-in">
+    <div class="flex justify-between items-start mb-4">
+      <div class="w-11 h-11 rounded-2xl bg-emerald-600 flex items-center justify-center">
+        <i data-lucide="key" class="w-5 h-5 text-white"></i>
+      </div>
+      <button id="closeChangePinModal" class="text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-5 h-5"></i></button>
+    </div>
+    <h3 class="font-display font-semibold text-lg">เปลี่ยนรหัส PIN แอดมิน</h3>
+    <form id="changePinForm" class="space-y-3 mt-3">
+      <div>
+        <label class="text-[11px] font-medium text-slate-500">PIN ปัจจุบัน</label>
+        <input id="oldPinInput" type="password" inputmode="numeric" maxlength="6" required class="w-full h-10 px-3 text-center tracking-widest rounded-xl border border-slate-200 focus:ring-2 focus:ring-tw-green/40 focus:outline-none" placeholder="••••••" />
+      </div>
+      <div>
+        <label class="text-[11px] font-medium text-slate-500">PIN ใหม่ (6 หลัก)</label>
+        <input id="newPinInput" type="password" inputmode="numeric" maxlength="6" required class="w-full h-10 px-3 text-center tracking-widest rounded-xl border border-slate-200 focus:ring-2 focus:ring-tw-green/40 focus:outline-none" placeholder="••••••" />
+      </div>
+      <div>
+        <label class="text-[11px] font-medium text-slate-500">ยืนยัน PIN ใหม่</label>
+        <input id="confirmPinInput" type="password" inputmode="numeric" maxlength="6" required class="w-full h-10 px-3 text-center tracking-widest rounded-xl border border-slate-200 focus:ring-2 focus:ring-tw-green/40 focus:outline-none" placeholder="••••••" />
+      </div>
+      <p id="changePinError" class="hidden text-xs text-red-500 text-center"></p>
+      <button type="submit" class="mt-2 w-full h-11 rounded-xl bg-tw-green hover:bg-tw-greenLight text-white font-medium text-sm transition-colors flex items-center justify-center gap-2">
+        <i data-lucide="check" class="w-4 h-4"></i> ยืนยันเปลี่ยน PIN
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- Edit / Add Modal -->
+<div id="editModal" class="hidden fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-900/50" data-modal-backdrop>
+  <div class="bg-white w-full sm:max-w-xl rounded-t-3xl sm:rounded-3xl shadow-2xl p-6 max-h-[92vh] overflow-y-auto fade-in">
+    <div class="flex justify-between items-center mb-4">
+      <h3 id="editModalTitle" class="font-display font-semibold text-lg">แก้ไขข้อมูลสินค้า</h3>
+      <button id="closeEditModal" class="text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-5 h-5"></i></button>
+    </div>
+    <form id="editForm" class="space-y-3.5">
+      <input type="hidden" id="editId" />
+      
+      <div class="p-3 bg-red-50 border border-red-200 rounded-2xl flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <i data-lucide="zap" class="w-5 h-5 text-red-600 fill-red-600"></i>
+          <div>
+            <p class="text-xs font-semibold text-red-900">ร่วมรายการ FLASH SALE</p>
+            <p class="text-[11px] text-red-600">แสดงผลในแถบ Flash Sale และติดป้ายดีลลดแรง</p>
+          </div>
+        </div>
+        <label class="relative inline-flex items-center cursor-pointer">
+          <input type="checkbox" id="editIsFlashSale" class="sr-only peer">
+          <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-600"></div>
+        </label>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="text-xs font-medium text-slate-500">ยี่ห้อ</label>
+          <select id="editBrand" class="w-full h-11 mt-1 rounded-xl border border-slate-200 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-tw-green/40">
+            <option value="Apple">Apple</option>
+            <option value="Samsung">Samsung</option>
+            <option value="Vivo">Vivo</option>
+            <option value="OPPO">OPPO</option>
+            <option value="Other">อื่นๆ (ระบุเอง)</option>
+          </select>
+          <div id="customBrandContainer" class="hidden mt-2">
+            <input id="customBrandInput" type="text" placeholder="พิมพ์ชื่อยี่ห้อ เช่น Xiaomi..." class="w-full h-10 rounded-xl border border-tw-green/60 px-3 text-xs focus:outline-none focus:ring-2 focus:ring-tw-green/40 bg-emerald-50/30" />
+          </div>
+        </div>
+        <div>
+          <label class="text-xs font-medium text-slate-500">สถานะสต๊อก</label>
+          <select id="editStock" class="w-full h-11 mt-1 rounded-xl border border-slate-200 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-tw-green/40">
+            <option value="true">มีสินค้า</option>
+            <option value="false">สินค้าหมด</option>
+          </select>
+        </div>
+      </div>
+      <div>
+        <label class="text-xs font-medium text-slate-500">ชื่อรุ่น</label>
+        <input id="editModel" type="text" required placeholder="เช่น iPhone 17 (Lavender) หรือ Galaxy S26 Ultra" class="w-full h-11 mt-1 rounded-xl border border-slate-200 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-tw-green/40" />
+      </div>
+      <div>
+        <label class="text-xs font-medium text-slate-500">URL รูปภาพ</label>
+        <input id="editImage" type="text" placeholder="วางลิงก์รูปภาพ https://..." class="w-full h-11 mt-1 rounded-xl border border-slate-200 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-tw-green/40" />
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="text-xs font-medium text-slate-500">หน้าจอ (Display)</label>
+          <input id="editDisplay" type="text" class="w-full h-11 mt-1 rounded-xl border border-slate-200 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-tw-green/40" />
+        </div>
+        <div>
+          <label class="text-xs font-medium text-slate-500">ชิปเซ็ต (Chipset)</label>
+          <input id="editChipset" type="text" class="w-full h-11 mt-1 rounded-xl border border-slate-200 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-tw-green/40" />
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="text-xs font-medium text-slate-500">กล้อง (Camera)</label>
+          <input id="editCamera" type="text" class="w-full h-11 mt-1 rounded-xl border border-slate-200 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-tw-green/40" />
+        </div>
+        <div>
+          <label class="text-xs font-medium text-slate-500">แบตเตอรี่ (Battery)</label>
+          <input id="editBattery" type="text" class="w-full h-11 mt-1 rounded-xl border border-slate-200 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-tw-green/40" />
+        </div>
+      </div>
+
+      <div class="pt-2 border-t border-slate-100">
+        <div class="flex items-center justify-between mt-3 mb-2">
+          <label class="text-xs font-medium text-slate-500">ความจุ &amp; ราคาแต่ละความจุ</label>
+          <button type="button" id="addVariantRowBtn" class="flex items-center gap-1 text-[11px] font-medium text-tw-green hover:text-tw-greenLight">
+            <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i> เพิ่มความจุ
+          </button>
+        </div>
+        <div id="variantRows" class="space-y-2"></div>
+        <p class="text-[11px] text-slate-400 mt-1.5">ช่อง "ราคาโปร" จะใช้เป็นราคา Flash Sale</p>
+      </div>
+
+      <div class="flex gap-2 pt-2">
+        <button type="button" id="cancelEditBtn" class="flex-1 h-12 rounded-2xl border border-slate-200 text-slate-600 font-medium hover:bg-slate-50">ยกเลิก</button>
+        <button type="submit" class="flex-1 h-12 rounded-2xl bg-tw-green hover:bg-tw-greenLight text-white font-medium flex items-center justify-center gap-2">
+          <i data-lucide="save" class="w-4 h-4"></i> บันทึก
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Delete Confirm Modal -->
+<div id="deleteModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50" data-modal-backdrop>
+  <div class="bg-white w-full max-w-sm rounded-3xl shadow-2xl p-6 fade-in text-center">
+    <div class="w-12 h-12 mx-auto rounded-2xl bg-red-50 flex items-center justify-center mb-3">
+      <i data-lucide="trash-2" class="w-6 h-6 text-red-500"></i>
+    </div>
+    <h3 class="font-display font-semibold text-lg">ลบรุ่นนี้ออกจากระบบ?</h3>
+    <p id="deleteModalText" class="text-sm text-slate-500 mt-1 mb-5">การลบไม่สามารถย้อนกลับได้</p>
+    <div class="flex gap-2">
+      <button id="cancelDeleteBtn" class="flex-1 h-12 rounded-2xl border border-slate-200 text-slate-600 font-medium hover:bg-slate-50">ยกเลิก</button>
+      <button id="confirmDeleteBtn" class="flex-1 h-12 rounded-2xl bg-red-500 hover:bg-red-600 text-white font-medium">ลบเลย</button>
+    </div>
+  </div>
+</div>
+
+<div id="toastContainer" class="fixed bottom-4 left-1/2 -translate-x-1/2 z-[60] flex flex-col items-center gap-2"></div>
+
+<!-- Firebase Module & Main Logic -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
+import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyD1vf40OPzC9ofmxSNxY2mDuhQypWv2z1E",
+  authDomain: "ais-telewis.firebaseapp.com",
+  projectId: "ais-telewis",
+  storageBucket: "ais-telewis.firebasestorage.app",
+  messagingSenderId: "144557800100",
+  appId: "1:144557800100:web:a397a96c3c08af9f9ec431",
+  measurementId: "G-0F4R0J7SYT"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const DOC_REF = doc(db, "telewiz_store", "catalog");
+const CONFIG_REF = doc(db, "telewiz_store", "settings");
+
+const DEFAULT_PIN = '046057';
+
+const DEFAULT_PHONES = [
+  // Apple
+  { id:'ap-17-lavender', brand:'Apple', model:'iPhone 17 (Lavender)', image:'https://placehold.co/600x600/1e293b/ffffff?text=iPhone+17', inStock:true, isFlashSale:true, specs:{ display:'6.1" (OLED) Promotion 120Hz', chipset:'Apple A19', camera:'48 MP / 24MP', battery:'4298 mAh' }, variants:[ {storage:'256GB', price:29900, promo:28500} ] },
+  { id:'ap-17pm', brand:'Apple', model:'iPhone 17 Pro Max', image:'https://placehold.co/600x600/0f172a/ffffff?text=iPhone+17+Pro+Max', inStock:true, isFlashSale:true, specs:{ display:'6.9" OLED 120Hz', chipset:'Apple A19 Pro', camera:'48MP Triple', battery:'4850mAh' }, variants:[ {storage:'256GB', price:51900, promo:47900}, {storage:'512GB', price:58900, promo:54900}, {storage:'1TB', price:65900, promo:null} ] },
+  { id:'ap-17p', brand:'Apple', model:'iPhone 17 Pro', image:'https://placehold.co/600x600/0f172a/ffffff?text=iPhone+17+Pro', inStock:true, isFlashSale:false, specs:{ display:'6.3" OLED 120Hz', chipset:'Apple A19 Pro', camera:'48MP Triple', battery:'3800mAh' }, variants:[ {storage:'256GB', price:45900, promo:null}, {storage:'512GB', price:53900, promo:null} ] },
+  { id:'ap-16pm', brand:'Apple', model:'iPhone 16 Pro Max', image:'https://placehold.co/600x600/1c1c1e/ffffff?text=iPhone+16+Pro+Max', inStock:true, isFlashSale:true, specs:{ display:'6.9" OLED 120Hz', chipset:'Apple A18 Pro', camera:'48MP Triple', battery:'4685mAh' }, variants:[ {storage:'256GB', price:48900, promo:46900}, {storage:'512GB', price:55900, promo:null} ] },
+  { id:'ap-16-pink', brand:'Apple', model:'iPhone 16 (Pink)', image:'https://placehold.co/600x600/1c1c1e/ffffff?text=iPhone+16', inStock:true, isFlashSale:true, specs:{ display:'6.1" OLED 60Hz', chipset:'Apple A18', camera:'48MP Dual', battery:'3561mAh' }, variants:[ {storage:'128GB', price:29900, promo:25500}, {storage:'256GB', price:33900, promo:null}, {storage:'512GB', price:41900, promo:null} ] },
+
+  // Samsung
+  { id:'sm-s26u', brand:'Samsung', model:'Galaxy S26 Ultra', image:'https://placehold.co/600x600/0284c7/ffffff?text=S26+Ultra', inStock:true, isFlashSale:true, specs:{ display:'6.9" AMOLED 2X 120Hz', chipset:'Snapdragon 8 Elite', camera:'200MP Quad', battery:'5200mAh' }, variants:[ {storage:'256GB', price:46900, promo:41900}, {storage:'512GB', price:50900, promo:null} ] },
+  { id:'sm-s26', brand:'Samsung', model:'Galaxy S26', image:'https://placehold.co/600x600/0369a1/ffffff?text=Galaxy+S26', inStock:true, isFlashSale:false, specs:{ display:'6.3" AMOLED 2X 120Hz', chipset:'Exynos 2600', camera:'50MP Triple', battery:'4200mAh' }, variants:[ {storage:'128GB', price:28900, promo:null}, {storage:'256GB', price:31900, promo:null} ] },
+  { id:'sm-a57', brand:'Samsung', model:'Galaxy A57', image:'https://placehold.co/600x600/38bdf8/ffffff?text=Galaxy+A57', inStock:true, isFlashSale:false, specs:{ display:'6.6" AMOLED 120Hz', chipset:'Exynos 1580', camera:'50MP Triple', battery:'5000mAh' }, variants:[ {storage:'128GB', price:14999, promo:13500}, {storage:'256GB', price:16999, promo:null} ] },
+  { id:'sm-a37', brand:'Samsung', model:'Galaxy A37', image:'https://placehold.co/600x600/7dd3fc/ffffff?text=Galaxy+A37', inStock:true, isFlashSale:false, specs:{ display:'6.6" AMOLED 120Hz', chipset:'Exynos 1480', camera:'50MP Triple', battery:'5000mAh' }, variants:[ {storage:'128GB', price:11499, promo:null} ] },
+  { id:'sm-a27', brand:'Samsung', model:'Galaxy A27', image:'https://placehold.co/600x600/bae6fd/0f172a?text=Galaxy+A27', inStock:true, isFlashSale:false, specs:{ display:'6.5" AMOLED 120Hz', chipset:'Dimensity 6300', camera:'50MP Dual', battery:'5000mAh' }, variants:[ {storage:'128GB', price:8999, promo:7999} ] },
+
+  // Vivo & OPPO & Other
+  { id:'vv-x300p', brand:'Vivo', model:'Vivo X300 Pro', image:'https://placehold.co/600x600/475569/ffffff?text=Vivo+X300+Pro', inStock:true, isFlashSale:true, specs:{ display:'6.78" AMOLED 120Hz', chipset:'Dimensity 9500', camera:'ZEISS 200MP', battery:'6000mAh' }, variants:[ {storage:'512GB', price:34999, promo:30999} ] },
+  { id:'vv-v70-5g', brand:'Vivo', model:'Vivo V70 5G', image:'https://placehold.co/600x600/94a3b8/0f172a?text=Vivo+V70+5G', inStock:true, isFlashSale:false, specs:{ display:'6.78" AMOLED 120Hz', chipset:'Snapdragon 7 Gen 4', camera:'50MP Dual', battery:'5600mAh' }, variants:[ {storage:'256GB', price:15999, promo:14499} ] },
+  { id:'op-r16-5g', brand:'OPPO', model:'OPPO Reno 16 5G', image:'https://placehold.co/600x600/15803d/ffffff?text=Reno+16+5G', inStock:true, isFlashSale:true, specs:{ display:'6.7" OLED 120Hz', chipset:'Dimensity 7400', camera:'50MP Triple', battery:'5600mAh' }, variants:[ {storage:'256GB', price:16999, promo:14999} ] },
+  { id:'xm-15t', brand:'Xiaomi', model:'Xiaomi 15T 5G (12/256)', image:'https://placehold.co/600x600/334155/ffffff?text=Xiaomi+15T', inStock:true, isFlashSale:true, specs:{ display:'6.67" AMOLED 144Hz', chipset:'Dimensity 8300', camera:'50MP Leica', battery:'5000mAh' }, variants:[ {storage:'128GB', price:15490, promo:14999}, {storage:'256GB', price:17490, promo:null} ] },
+];
+
+const state = {
+  phones: [],
+  adminPin: DEFAULT_PIN,
+  isAdmin: false,
+  activeBrand: 'All',
+  query: '',
+  selectedStorage: {},
+  editingId: null,
+  deletingId: null,
+  variantRowCount: 0,
+};
+
+let flashAutoPlayTimer = null;
+let userHasInteracted = false;
+
+async function syncToFirebase(data) {
+  try {
+    await setDoc(DOC_REF, { items: data });
+  } catch (err) {
+    console.error("Firebase sync error:", err);
+    toast("บันทึกข้อมูลไม่สำเร็จ ตรวจสอบ Firebase", "alert-triangle");
+  }
+}
+
+async function saveAdminPin(newPin) {
+  try {
+    await setDoc(CONFIG_REF, { adminPin: newPin }, { merge: true });
+    state.adminPin = newPin;
+    return true;
+  } catch (err) {
+    console.error("Save PIN error:", err);
+    return false;
+  }
+}
+
+const thb = n => new Intl.NumberFormat('th-TH').format(n);
+const $ = id => document.getElementById(id);
+
+function refreshIcons() { if (window.lucide) lucide.createIcons(); }
+
+function toast(msg, icon = 'check-circle') {
+  const el = document.createElement('div');
+  el.className = 'toast bg-tw-ink text-white text-sm px-4 py-2.5 rounded-full shadow-xl flex items-center gap-2';
+  el.innerHTML = `<i data-lucide="${icon}" class="w-4 h-4 text-emerald-400"></i><span>${msg}</span>`;
+  $('toastContainer').appendChild(el);
+  refreshIcons();
+  setTimeout(() => { el.style.opacity = '0'; el.style.transition = 'opacity .3s'; setTimeout(() => el.remove(), 300); }, 2200);
+}
+
+function brandCount(brand) {
+  if (brand === 'All') return state.phones.length;
+  return state.phones.filter(p => p.brand.toLowerCase() === brand.toLowerCase()).length;
+}
+
+function capacityValue(label) {
+  const s = String(label).toUpperCase();
+  const m = s.match(/([\d.]+)\s*(GB|TB)/);
+  if (!m) return 0;
+  let val = parseFloat(m[1]);
+  if (m[2] === 'TB') val *= 1024;
+  return val;
+}
+
+function sortedVariants(phone) {
+  return [...phone.variants].sort((a, b) => capacityValue(a.storage) - capacityValue(b.storage));
+}
+
+function getSelectedVariant(phone) {
+  const variants = sortedVariants(phone);
+  const wanted = state.selectedStorage[phone.id];
+  return variants.find(v => v.storage === wanted) || variants[0];
+}
+
+function renderBrandTabs() {
+  const uniqueBrands = ['All', ...new Set(state.phones.map(p => p.brand.trim()).filter(Boolean))];
+  $('brandTabs').innerHTML = uniqueBrands.map(b => {
+    const label = b === 'All' ? 'ทั้งหมด' : b;
+    const active = state.activeBrand.toLowerCase() === b.toLowerCase();
+    return `
+      <button data-brand="${b}" data-active="${active}"
+        class="brand-tab shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium border transition-all
+        ${active ? 'border-transparent' : 'bg-white border-slate-200 text-slate-600 hover:border-tw-green hover:text-tw-green'}">
+        ${label}
+        <span class="brand-count text-[11px] ${active ? '' : 'text-slate-400'}">${brandCount(b)}</span>
+      </button>`;
+  }).join('');
+
+  document.querySelectorAll('.brand-tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      state.activeBrand = btn.dataset.brand;
+      renderBrandTabs();
+      renderGrid();
+    });
+  });
+}
+
+function getFilteredPhones() {
+  const q = state.query.trim().toLowerCase();
+  return state.phones.filter(p => {
+    const brandMatch = state.activeBrand === 'All' || p.brand.toLowerCase() === state.activeBrand.toLowerCase();
+    if (!brandMatch) return false;
+    if (!q) return true;
+    const haystack = [
+      p.model, p.brand, p.specs.display, p.specs.chipset, p.specs.camera, p.specs.battery,
+      ...p.variants.map(v => v.storage)
+    ].join(' ').toLowerCase();
+    return haystack.includes(q);
+  });
+}
+
+function specRow(icon, text) {
+  return `<div class="flex items-start gap-1.5 text-[11px] sm:text-xs text-slate-500">
+      <i data-lucide="${icon}" class="w-3.5 h-3.5 mt-0.5 text-slate-400 shrink-0"></i>
+      <span class="line-clamp-1">${text}</span>
+    </div>`;
+}
+
+// Storage pills rendered identically as buttons for both single and multiple options
+function storagePills(phone, activeVariant, isFlash = false) {
+  const variants = sortedVariants(phone);
+  if (!variants.length) return '';
+  return `<div class="flex flex-wrap gap-1.5 mt-2.5" data-storage-group="${phone.id}">
+    ${variants.map(v => `
+      <button type="button" data-storage-pill="${phone.id}" data-storage-value="${v.storage}"
+        data-active="${v.storage === activeVariant.storage}"
+        class="${isFlash ? 'storage-pill-flash' : 'storage-pill'} text-[10px] font-medium px-2.5 py-1 rounded-lg border border-slate-200 text-slate-600 transition-colors">
+        ${v.storage}
+      </button>`).join('')}
+  </div>`;
+}
+
+// Flash Sale Product Card (With shimmering flash badge)
+function flashSaleCard(p) {
+  const activeVariant = getSelectedVariant(p);
+  const hasPromo = activeVariant.promo && activeVariant.promo > 0 && activeVariant.promo < activeVariant.price;
+  const salePrice = hasPromo ? activeVariant.promo : activeVariant.price;
+  const originalPrice = activeVariant.price;
+  const discountPercent = hasPromo ? Math.round((1 - activeVariant.promo / activeVariant.price) * 100) : 0;
+
+  const adminControls = state.isAdmin ? `
+    <div class="mt-3 pt-3 border-t border-red-100 space-y-2 text-tw-ink">
+      <div class="flex items-center justify-between">
+        <p class="text-[11px] text-slate-500 font-medium">${activeVariant.storage}</p>
+        <button data-toggle-flash="${p.id}" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-red-100 text-red-600 hover:bg-red-200">
+          นำออกจาก Flash
+        </button>
+      </div>
+      <div class="grid grid-cols-2 gap-1.5">
+        <div>
+          <span class="text-[10px] text-slate-400">ราคาปกติ</span>
+          <input type="number" min="0" value="${activeVariant.price}" data-price-input="${p.id}" data-storage-key="${activeVariant.storage}"
+            class="w-full h-7 px-1.5 text-xs rounded border border-slate-200" />
+        </div>
+        <div>
+          <span class="text-[10px] text-red-500 font-medium">Flash Price</span>
+          <input type="number" min="0" value="${activeVariant.promo ?? ''}" placeholder="ใส่ราคาลด" data-promo-input="${p.id}" data-storage-key="${activeVariant.storage}"
+            class="w-full h-7 px-1.5 text-xs rounded border border-red-300 bg-red-50/50" />
+        </div>
+      </div>
+    </div>` : '';
+
+  return `
+  <div class="w-[78%] sm:w-[48%] md:w-[32%] lg:w-[calc(25%-12px)] shrink-0 flash-card-border bg-white rounded-2xl shadow-lg p-3 sm:p-4 flex flex-col justify-between text-slate-900 select-none ${!p.inStock ? 'opacity-75' : ''}">
+    <div>
+      <div class="relative aspect-square rounded-xl overflow-hidden bg-slate-50 mb-3 pointer-events-none">
+        <img src="${p.image}" alt="${p.model}" loading="lazy" class="w-full h-full object-cover" />
+        
+        <!-- Shimmering Flash Sale Badge -->
+        <span class="flash-badge-corner flash-shimmer-badge absolute top-0 left-0 text-white font-black text-[10px] sm:text-xs pl-2 pr-4 py-1 flex items-center gap-1 shadow">
+          <i data-lucide="zap" class="w-3 h-3 fill-amber-300 text-amber-300"></i> FLASH SALE
+        </span>
+
+        ${discountPercent > 0 ? `
+          <div class="absolute top-2 right-2 bg-amber-400 text-slate-950 font-black text-xs px-2 py-1 rounded-lg shadow-md flex flex-col items-center leading-none">
+            <span class="text-[9px] font-bold">ลด</span>
+            <span>${discountPercent}%</span>
+          </div>` : ''}
+
+        ${!p.inStock ? '<span class="absolute inset-0 bg-black/60 backdrop-blur-[1px] flex items-center justify-center"><span class="text-xs font-bold bg-white text-red-600 px-3 py-1 rounded-full shadow">สินค้าหมด</span></span>' : ''}
+      </div>
+
+      <span class="text-[11px] font-semibold text-red-600 uppercase tracking-wide">${p.brand}</span>
+      <h3 class="font-display font-bold text-sm sm:text-base text-slate-900 leading-snug line-clamp-2 min-h-[2.4em]">${p.model}</h3>
+
+      ${storagePills(p, activeVariant, true)}
+    </div>
+
+    <div class="mt-4 pt-3 border-t border-slate-100">
+      <div class="flex items-baseline justify-between gap-1">
+        <span class="text-[11px] text-slate-400">ราคาปกติ:</span>
+        <span class="price-strike text-xs sm:text-sm text-slate-400 font-medium">฿${thb(originalPrice)}</span>
+      </div>
+      
+      <div class="flex items-end justify-between gap-1 mt-0.5">
+        <div>
+          <span class="text-[10px] font-bold text-red-600 uppercase">ราคาพิเศษ</span>
+          <div class="font-display font-black text-red-600 text-2xl sm:text-3xl leading-none tracking-tight">
+            ฿${thb(salePrice)}
+          </div>
+        </div>
+        ${!state.isAdmin ? `<span class="text-[10px] font-bold px-2.5 py-1 rounded-md ${p.inStock ? 'bg-red-50 text-red-600 border border-red-200' : 'bg-slate-100 text-slate-400'}">${p.inStock ? 'ดีลเด็ด' : 'หมด'}</span>` : ''}
+      </div>
+
+      ${adminControls}
+    </div>
+  </div>`;
+}
+
+// Standard Product Card (With Flash Sale Tag Indicator & Unified Storage Buttons)
+function standardProductCard(p) {
+  const activeVariant = getSelectedVariant(p);
+  const hasPromo = activeVariant.promo && activeVariant.promo > 0 && activeVariant.promo < activeVariant.price;
+  const displayPrice = hasPromo ? activeVariant.promo : activeVariant.price;
+
+  const adminControls = state.isAdmin ? `
+    <div class="mt-3 pt-3 border-t border-slate-100 space-y-2">
+      <div class="flex items-center justify-between">
+        <p class="text-[11px] text-slate-400">แก้ไข <span class="font-medium text-tw-ink">${activeVariant.storage}</span></p>
+        <button data-toggle-flash="${p.id}" class="text-[10px] font-medium px-2 py-0.5 rounded-full border ${p.isFlashSale ? 'bg-red-50 border-red-300 text-red-600' : 'bg-slate-50 border-slate-200 text-slate-500'}">
+          ${p.isFlashSale ? '⚡ อยู่ใน Flash Sale' : '+ เพิ่มเข้า Flash Sale'}
+        </button>
+      </div>
+      <div class="flex items-center gap-1.5">
+        <span class="text-[11px] text-slate-400 w-16 shrink-0">ราคาปกติ</span>
+        <div class="relative flex-1">
+          <span class="absolute left-2 top-1/2 -translate-y-1/2 text-[11px] text-slate-400">฿</span>
+          <input type="number" min="0" value="${activeVariant.price}" data-price-input="${p.id}" data-storage-key="${activeVariant.storage}"
+            class="w-full h-8 pl-5 pr-2 text-xs rounded-lg border border-slate-200 focus:outline-none focus:ring-1 focus:ring-tw-green" />
+        </div>
+      </div>
+      <div class="flex items-center gap-1.5">
+        <span class="text-[11px] text-slate-400 w-16 shrink-0">ราคาโปร</span>
+        <div class="relative flex-1">
+          <span class="absolute left-2 top-1/2 -translate-y-1/2 text-[11px] text-slate-400">฿</span>
+          <input type="number" min="0" value="${activeVariant.promo ?? ''}" placeholder="ไม่มีโปร" data-promo-input="${p.id}" data-storage-key="${activeVariant.storage}"
+            class="w-full h-8 pl-5 pr-2 text-xs rounded-lg border border-slate-200 focus:outline-none focus:ring-1 focus:ring-tw-green" />
+        </div>
+      </div>
+      <div class="flex items-center gap-1.5 pt-0.5">
+        <button data-toggle-stock="${p.id}" class="flex-1 h-8 text-[11px] font-medium rounded-lg border ${p.inStock ? 'border-emerald-200 bg-emerald-50 text-emerald-600' : 'border-red-200 bg-red-50 text-red-500'}">
+          ${p.inStock ? 'มีสินค้า' : 'สินค้าหมด'}
+        </button>
+        <button data-edit="${p.id}" class="h-8 w-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-500 hover:text-tw-green hover:border-tw-green" title="แก้ไขข้อมูล">
+          <i data-lucide="pencil" class="w-3.5 h-3.5"></i>
+        </button>
+        <button data-delete="${p.id}" class="h-8 w-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-500 hover:text-red-500 hover:border-red-300">
+          <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+        </button>
+      </div>
+    </div>` : '';
+
+  return `
+  <article class="sim-card group bg-white rounded-2xl border ${p.isFlashSale ? 'border-red-200 ring-1 ring-red-100' : 'border-slate-200'} shadow-card hover:shadow-cardHover transition-shadow p-3 sm:p-4 fade-in flex flex-col ${!p.inStock ? 'opacity-70' : ''}">
+    <div class="relative aspect-square rounded-xl overflow-hidden bg-slate-50 mb-3">
+      <img src="${p.image}" alt="${p.model}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+      
+      <!-- Brand & Flash Badge on Top Left -->
+      <div class="absolute top-2 left-2 flex flex-col gap-1 items-start">
+        <span class="text-[10px] font-medium px-2 py-0.5 rounded-full bg-white/90 backdrop-blur text-slate-600 shadow-sm">${p.brand}</span>
+        ${p.isFlashSale ? '<span class="text-[9px] font-bold px-2 py-0.5 rounded-md flash-shimmer-badge text-white shadow-sm flex items-center gap-1"><i data-lucide="zap" class="w-2.5 h-2.5 fill-amber-300 text-amber-300"></i> FLASH SALE</span>' : ''}
+      </div>
+
+      ${!p.inStock ? '<span class="absolute inset-0 bg-white/40 flex items-center justify-center"><span class="text-[11px] font-semibold bg-slate-800 text-white px-3 py-1 rounded-full">สินค้าหมด</span></span>' : ''}
+      ${hasPromo ? `<span class="absolute top-2 right-2 text-[10px] font-semibold px-2 py-0.5 rounded-full ${p.isFlashSale ? 'bg-red-600' : 'bg-red-500'} text-white shadow-sm">ลด ${Math.round((1-activeVariant.promo/activeVariant.price)*100)}%</span>` : ''}
+    </div>
+
+    <h3 class="font-display font-semibold text-sm sm:text-base text-tw-ink leading-tight line-clamp-2 min-h-[2.5em]">${p.model}</h3>
+
+    <div class="mt-2 space-y-1">
+      ${specRow('smartphone', p.specs.display)}
+      ${specRow('cpu', p.specs.chipset)}
+      ${specRow('camera', p.specs.camera)}
+      ${specRow('battery', p.specs.battery)}
+    </div>
+
+    ${storagePills(p, activeVariant, false)}
+
+    <div class="mt-auto pt-3 flex items-end justify-between gap-2">
+      <div>
+        ${hasPromo ? `<p class="price-strike text-[11px] text-slate-400">฿${thb(activeVariant.price)}</p>` : ''}
+        <p class="font-display font-bold ${p.isFlashSale ? 'text-red-600' : 'text-tw-green'} text-base sm:text-lg leading-none">฿${thb(displayPrice)}</p>
+      </div>
+      ${!state.isAdmin ? `<span class="text-[10px] font-medium px-2.5 py-1.5 rounded-lg ${p.inStock ? (p.isFlashSale ? 'bg-red-50 text-red-600 font-semibold' : 'bg-emerald-50 text-emerald-600') : 'bg-slate-100 text-slate-400'}">${p.inStock ? (p.isFlashSale ? 'ดีลเด็ด' : 'พร้อมส่ง') : 'หมด'}</span>` : ''}
+    </div>
+
+    ${adminControls}
+  </article>`;
+}
+
+function renderFlashSale() {
+  const flashPhones = state.phones.filter(p => p.isFlashSale);
+  const container = $('flashSaleContainer');
+  
+  if (flashPhones.length === 0) {
+    container.innerHTML = '';
+    $('emptyFlashSale').classList.remove('hidden');
+    $('flashPrevBtn').classList.add('hidden');
+    $('flashNextBtn').classList.add('hidden');
+  } else {
+    $('emptyFlashSale').classList.add('hidden');
+    $('flashPrevBtn').classList.remove('hidden');
+    $('flashNextBtn').classList.remove('hidden');
+    container.innerHTML = flashPhones.map(flashSaleCard).join('');
+  }
+}
+
+function startFlashAutoPlay() {
+  stopFlashAutoPlay();
+  flashAutoPlayTimer = setInterval(() => {
+    if (userHasInteracted) return;
+    const container = $('flashSaleContainer');
+    if (!container) return;
+    const maxScroll = container.scrollWidth - container.clientWidth;
+    if (container.scrollLeft >= maxScroll - 10) {
+      container.scrollTo({ left: 0, behavior: 'smooth' });
+    } else {
+      const scrollStep = container.querySelector('.flash-card-border')?.clientWidth || 260;
+      container.scrollBy({ left: scrollStep + 16, behavior: 'smooth' });
+    }
+  }, 3000);
+}
+
+function stopFlashAutoPlay() {
+  if (flashAutoPlayTimer) {
+    clearInterval(flashAutoPlayTimer);
+    flashAutoPlayTimer = null;
+  }
+}
+
+// Enhanced Smooth Drag-to-Scroll + Touch + Button controls
+function bindFlashControls() {
+  const container = $('flashSaleContainer');
+  const prevBtn = $('flashPrevBtn');
+  const nextBtn = $('flashNextBtn');
+
+  function userInteracted() {
+    userHasInteracted = true;
+    stopFlashAutoPlay();
+  }
+
+  prevBtn.onclick = () => {
+    userInteracted();
+    const itemWidth = container.querySelector('.flash-card-border')?.clientWidth || 280;
+    container.scrollBy({ left: -(itemWidth + 16), behavior: 'smooth' });
+  };
+
+  nextBtn.onclick = () => {
+    userInteracted();
+    const itemWidth = container.querySelector('.flash-card-border')?.clientWidth || 280;
+    container.scrollBy({ left: itemWidth + 16, behavior: 'smooth' });
+  };
+
+  // Mouse Drag to Scroll
+  let isDown = false;
+  let startX = 0;
+  let scrollLeftPos = 0;
+
+  container.addEventListener('mousedown', (e) => {
+    userInteracted();
+    isDown = true;
+    container.classList.add('is-dragging');
+    startX = e.pageX - container.offsetLeft;
+    scrollLeftPos = container.scrollLeft;
+  });
+
+  window.addEventListener('mouseup', () => {
+    if (isDown) {
+      isDown = false;
+      container.classList.remove('is-dragging');
+    }
+  });
+
+  window.addEventListener('mousemove', (e) => {
+    if (!isDown) return;
+    e.preventDefault();
+    const x = e.pageX - container.offsetLeft;
+    const walk = (x - startX) * 1.6;
+    container.scrollLeft = scrollLeftPos - walk;
+  });
+
+  // Touch Support for mobile / iPad / notebooks
+  container.addEventListener('touchstart', () => {
+    userInteracted();
+  }, { passive: true });
+
+  container.addEventListener('wheel', () => {
+    userInteracted();
+  }, { passive: true });
+}
+
+function renderGrid() {
+  renderFlashSale();
+  const list = getFilteredPhones();
+  $('resultCount').textContent = `พบ ${list.length} รุ่น จากทั้งหมด ${state.phones.length} รุ่น`;
+
+  if (list.length === 0) {
+    $('productGrid').innerHTML = '';
+    $('emptyState').classList.remove('hidden');
+    $('emptyState').classList.add('flex');
+  } else {
+    $('emptyState').classList.add('hidden');
+    $('emptyState').classList.remove('flex');
+    $('productGrid').innerHTML = list.map(standardProductCard).join('');
+  }
+  refreshIcons();
+  bindCardEvents();
+}
+
+function bindCardEvents() {
+  document.querySelectorAll('[data-storage-pill]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.storagePill;
+      state.selectedStorage[id] = btn.dataset.storageValue;
+      renderGrid();
+    });
+  });
+
+  if (!state.isAdmin) return;
+
+  document.querySelectorAll('[data-toggle-flash]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.toggleFlash;
+      const phone = state.phones.find(p => p.id === id);
+      phone.isFlashSale = !phone.isFlashSale;
+      syncToFirebase(state.phones);
+      toast(`${phone.isFlashSale ? 'เพิ่มเข้า' : 'นำออก'} Flash Sale เรียบร้อย`, 'zap');
+    });
+  });
+
+  document.querySelectorAll('[data-price-input]').forEach(input => {
+    input.addEventListener('change', () => {
+      const id = input.dataset.priceInput;
+      const storageKey = input.dataset.storageKey;
+      const phone = state.phones.find(p => p.id === id);
+      const variant = phone.variants.find(v => v.storage === storageKey);
+      variant.price = Math.max(0, parseInt(input.value || '0', 10));
+      syncToFirebase(state.phones);
+      toast(`อัปเดตราคา ${phone.model} เรียบร้อย`, 'tag');
+    });
+  });
+
+  document.querySelectorAll('[data-promo-input]').forEach(input => {
+    input.addEventListener('change', () => {
+      const id = input.dataset.promoInput;
+      const storageKey = input.dataset.storageKey;
+      const phone = state.phones.find(p => p.id === id);
+      const variant = phone.variants.find(v => v.storage === storageKey);
+      const raw = input.value.trim();
+      variant.promo = raw === '' ? null : Math.max(0, parseInt(raw, 10));
+      syncToFirebase(state.phones);
+      toast(`อัปเดตราคาโปรโมชั่น ${phone.model} เรียบร้อย`, 'badge-percent');
+    });
+  });
+
+  document.querySelectorAll('[data-toggle-stock]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.toggleStock;
+      const phone = state.phones.find(p => p.id === id);
+      phone.inStock = !phone.inStock;
+      syncToFirebase(state.phones);
+      toast(`${phone.model}: ${phone.inStock ? 'มีสินค้า' : 'สินค้าหมด'}`, phone.inStock ? 'package-check' : 'package-x');
+    });
+  });
+
+  document.querySelectorAll('[data-edit]').forEach(btn => {
+    btn.addEventListener('click', () => openEditModal(btn.dataset.edit));
+  });
+
+  document.querySelectorAll('[data-delete]').forEach(btn => {
+    btn.addEventListener('click', () => openDeleteModal(btn.dataset.delete));
+  });
+}
+
+$('searchInput').addEventListener('input', (e) => {
+  state.query = e.target.value;
+  $('clearSearchBtn').classList.toggle('hidden', state.query.length === 0);
+  renderGrid();
+});
+$('clearSearchBtn').addEventListener('click', () => {
+  $('searchInput').value = '';
+  state.query = '';
+  $('clearSearchBtn').classList.add('hidden');
+  renderGrid();
+  $('searchInput').focus();
+});
+
+function setAdminMode(on) {
+  state.isAdmin = on;
+  const badges = [$('roleBadge'), $('roleBadgeMobile')];
+  badges.forEach(b => {
+    b.classList.toggle('badge-guest', !on);
+    b.classList.toggle('badge-admin', on);
+    b.innerHTML = on
+      ? '<i data-lucide="shield-check" class="w-3.5 h-3.5"></i> Admin Mode (จัดการระบบ)'
+      : '<i data-lucide="eye" class="w-3.5 h-3.5"></i> Guest Mode (ชมสินค้า)';
+  });
+  $('adminBar').classList.toggle('hidden', !on);
+  $('adminToggleBtn').innerHTML = on
+    ? '<i data-lucide="unlock" class="w-4 h-4"></i><span class="hidden sm:inline">แอดมิน</span>'
+    : '<i data-lucide="lock" class="w-4 h-4"></i><span class="hidden sm:inline">เข้าสู่ระบบแอดมิน</span>';
+  refreshIcons();
+  renderGrid();
+}
+
+$('adminToggleBtn').addEventListener('click', () => {
+  if (state.isAdmin) { setAdminMode(false); toast('ออกจากระบบแอดมินแล้ว', 'log-out'); }
+  else openPinModal();
+});
+$('logoutAdminBtn').addEventListener('click', () => { setAdminMode(false); toast('ออกจากระบบแอดมินแล้ว', 'log-out'); });
+
+function openPinModal() {
+  $('pinModal').classList.remove('hidden');
+  $('pinError').classList.add('hidden');
+  $('pinInput').value = '';
+  refreshIcons();
+  setTimeout(() => $('pinInput').focus(), 50);
+}
+function closePinModal() { $('pinModal').classList.add('hidden'); }
+$('closePinModal').addEventListener('click', closePinModal);
+$('pinModal').addEventListener('click', (e) => { if (e.target === $('pinModal')) closePinModal(); });
+
+$('pinForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+  if ($('pinInput').value === state.adminPin) {
+    closePinModal();
+    setAdminMode(true);
+    toast('เข้าสู่ระบบแอดมินสำเร็จ', 'shield-check');
+  } else {
+    $('pinError').classList.remove('hidden');
+    $('pinInput').value = '';
+    $('pinInput').focus();
+  }
+});
+
+function openChangePinModal() {
+  $('changePinModal').classList.remove('hidden');
+  $('changePinError').classList.add('hidden');
+  $('oldPinInput').value = '';
+  $('newPinInput').value = '';
+  $('confirmPinInput').value = '';
+  refreshIcons();
+  setTimeout(() => $('oldPinInput').focus(), 50);
+}
+function closeChangePinModal() { $('changePinModal').classList.add('hidden'); }
+$('changePinBtn').addEventListener('click', openChangePinModal);
+$('closeChangePinModal').addEventListener('click', closeChangePinModal);
+$('changePinModal').addEventListener('click', (e) => { if (e.target === $('changePinModal')) closeChangePinModal(); });
+
+$('changePinForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const oldPin = $('oldPinInput').value;
+  const newPin = $('newPinInput').value;
+  const confirmPin = $('confirmPinInput').value;
+  const errorEl = $('changePinError');
+
+  if (oldPin !== state.adminPin) {
+    errorEl.textContent = 'PIN ปัจจุบันไม่ถูกต้อง';
+    errorEl.classList.remove('hidden');
+    return;
+  }
+  if (newPin.length !== 6 || !/^\d+$/.test(newPin)) {
+    errorEl.textContent = 'PIN ใหม่ต้องเป็นตัวเลข 6 หลัก';
+    errorEl.classList.remove('hidden');
+    return;
+  }
+  if (newPin !== confirmPin) {
+    errorEl.textContent = 'รหัสยืนยัน PIN ใหม่ไม่ตรงกัน';
+    errorEl.classList.remove('hidden');
+    return;
+  }
+
+  const ok = await saveAdminPin(newPin);
+  if (ok) {
+    closeChangePinModal();
+    toast('เปลี่ยนรหัส PIN แอดมินสำเร็จ', 'key');
+  } else {
+    errorEl.textContent = 'ไม่สามารถบันทึก PIN ได้ โปรดลองใหม่';
+    errorEl.classList.remove('hidden');
+  }
+});
+
+$('editBrand').addEventListener('change', (e) => {
+  if (e.target.value === 'Other') {
+    $('customBrandContainer').classList.remove('hidden');
+    $('customBrandInput').focus();
+  } else {
+    $('customBrandContainer').classList.add('hidden');
+  }
+});
+
+function variantRowHTML(rowId, storage, price, promo) {
+  return `
+  <div class="flex items-center gap-1.5" data-variant-row="${rowId}">
+    <input type="text" placeholder="เช่น 256GB" value="${storage ?? ''}" data-variant-storage
+      class="w-24 h-10 rounded-lg border border-slate-200 px-2.5 text-xs focus:outline-none focus:ring-1 focus:ring-tw-green" />
+    <div class="relative flex-1">
+      <span class="absolute left-2 top-1/2 -translate-y-1/2 text-[11px] text-slate-400">฿</span>
+      <input type="number" min="0" placeholder="ราคาปกติ" value="${price ?? ''}" data-variant-price
+        class="w-full h-10 pl-5 pr-2 rounded-lg border border-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-tw-green" />
+    </div>
+    <div class="relative flex-1">
+      <span class="absolute left-2 top-1/2 -translate-y-1/2 text-[11px] text-slate-400">฿</span>
+      <input type="number" min="0" placeholder="ราคาโปร / Flash Sale" value="${promo ?? ''}" data-variant-promo
+        class="w-full h-10 pl-5 pr-2 rounded-lg border border-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-tw-green" />
+    </div>
+    <button type="button" data-remove-variant-row="${rowId}" class="h-10 w-10 shrink-0 flex items-center justify-center rounded-lg border border-slate-200 text-slate-400 hover:text-red-500 hover:border-red-300">
+      <i data-lucide="x" class="w-4 h-4"></i>
+    </button>
+  </div>`;
+}
+
+function addVariantRow(storage, price, promo) {
+  state.variantRowCount += 1;
+  const rowId = state.variantRowCount;
+  $('variantRows').insertAdjacentHTML('beforeend', variantRowHTML(rowId, storage, price, promo));
+  refreshIcons();
+  bindVariantRowRemoval();
+}
+
+function bindVariantRowRemoval() {
+  document.querySelectorAll('[data-remove-variant-row]').forEach(btn => {
+    btn.onclick = () => {
+      const row = document.querySelector(`[data-variant-row="${btn.dataset.removeVariantRow}"]`);
+      if (document.querySelectorAll('[data-variant-row]').length <= 1) {
+        toast('ต้องมีอย่างน้อย 1 ความจุ', 'alert-triangle');
+        return;
+      }
+      row.remove();
+    };
+  });
+}
+
+$('addVariantRowBtn').addEventListener('click', () => addVariantRow('', '', ''));
+
+function openEditModal(id) {
+  state.editingId = id || null;
+  const isNew = !id;
+  $('editModalTitle').textContent = isNew ? 'เพิ่มรุ่นใหม่' : 'แก้ไขข้อมูลสินค้า';
+
+  const p = isNew ? null : state.phones.find(x => x.id === id);
+  $('editId').value = id || '';
+  $('editIsFlashSale').checked = p ? !!p.isFlashSale : false;
+  
+  const standardBrands = ['Apple', 'Samsung', 'Vivo', 'OPPO'];
+  if (p) {
+    if (standardBrands.includes(p.brand)) {
+      $('editBrand').value = p.brand;
+      $('customBrandContainer').classList.add('hidden');
+      $('customBrandInput').value = '';
+    } else {
+      $('editBrand').value = 'Other';
+      $('customBrandContainer').classList.remove('hidden');
+      $('customBrandInput').value = p.brand;
+    }
+  } else {
+    $('editBrand').value = 'Apple';
+    $('customBrandContainer').classList.add('hidden');
+    $('customBrandInput').value = '';
+  }
+
+  $('editStock').value = p ? String(p.inStock) : 'true';
+  $('editModel').value = p ? p.model : '';
+  $('editImage').value = p ? p.image : '';
+  $('editDisplay').value = p ? p.specs.display : '';
+  $('editChipset').value = p ? p.specs.chipset : '';
+  $('editCamera').value = p ? p.specs.camera : '';
+  $('editBattery').value = p ? p.specs.battery : '';
+
+  $('variantRows').innerHTML = '';
+  state.variantRowCount = 0;
+  if (p && p.variants.length) {
+    sortedVariants(p).forEach(v => addVariantRow(v.storage, v.price, v.promo));
+  } else {
+    addVariantRow('128GB', '', '');
+  }
+
+  $('editModal').classList.remove('hidden');
+  refreshIcons();
+}
+
+function closeEditModal() { $('editModal').classList.add('hidden'); }
+$('closeEditModal').addEventListener('click', closeEditModal);
+$('cancelEditBtn').addEventListener('click', closeEditModal);
+$('editModal').addEventListener('click', (e) => { if (e.target === $('editModal')) closeEditModal(); });
+$('addPhoneBtn').addEventListener('click', () => openEditModal(null));
+
+$('editForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const id = $('editId').value;
+  
+  let brand = $('editBrand').value;
+  if (brand === 'Other') {
+    const custom = $('customBrandInput').value.trim();
+    if (!custom) {
+      toast('กรุณาระบุชื่อยี่ห้อ', 'alert-triangle');
+      $('customBrandInput').focus();
+      return;
+    }
+    brand = custom;
+  }
+
+  const model = $('editModel').value.trim();
+  const image = $('editImage').value.trim() || `https://placehold.co/600x600/16a34a/ffffff?text=${encodeURIComponent(model || 'Phone')}`;
+  const inStock = $('editStock').value === 'true';
+  const isFlashSale = $('editIsFlashSale').checked;
+  const specs = {
+    display: $('editDisplay').value.trim() || '-',
+    chipset: $('editChipset').value.trim() || '-',
+    camera: $('editCamera').value.trim() || '-',
+    battery: $('editBattery').value.trim() || '-',
+  };
+
+  if (!model) { toast('กรุณากรอกชื่อรุ่น', 'alert-triangle'); return; }
+
+  const variants = [];
+  document.querySelectorAll('[data-variant-row]').forEach(row => {
+    const storage = row.querySelector('[data-variant-storage]').value.trim();
+    const priceRaw = row.querySelector('[data-variant-price]').value.trim();
+    const promoRaw = row.querySelector('[data-variant-promo]').value.trim();
+    if (!storage || priceRaw === '') return;
+    variants.push({
+      storage,
+      price: Math.max(0, parseInt(priceRaw, 10)),
+      promo: promoRaw === '' ? null : Math.max(0, parseInt(promoRaw, 10)),
+    });
+  });
+
+  if (variants.length === 0) { toast('กรุณาระบุความจุและราคาอย่างน้อย 1 รายการ', 'alert-triangle'); return; }
+
+  let updatedList = [...state.phones];
+  if (id) {
+    const idx = updatedList.findIndex(p => p.id === id);
+    if (idx !== -1) {
+      updatedList[idx] = { ...updatedList[idx], brand, model, image, inStock, isFlashSale, specs, variants };
+    }
+  } else {
+    const newId = (brand.toLowerCase().replace(/[^a-z0-9]/g, '').slice(0,3) || 'ph') + '-' + Date.now();
+    updatedList.unshift({ id: newId, brand, model, image, inStock, isFlashSale, specs, variants });
+  }
+
+  await syncToFirebase(updatedList);
+  closeEditModal();
+  toast('บันทึกข้อมูลเรียบร้อย', 'cloud-upload');
+});
+
+function openDeleteModal(id) {
+  state.deletingId = id;
+  const phone = state.phones.find(p => p.id === id);
+  $('deleteModalText').textContent = `ต้องการลบ "${phone.model}" ออกจากระบบใช่หรือไม่?`;
+  $('deleteModal').classList.remove('hidden');
+  refreshIcons();
+}
+function closeDeleteModal() { $('deleteModal').classList.add('hidden'); state.deletingId = null; }
+$('cancelDeleteBtn').addEventListener('click', closeDeleteModal);
+$('deleteModal').addEventListener('click', (e) => { if (e.target === $('deleteModal')) closeDeleteModal(); });
+
+$('confirmDeleteBtn').addEventListener('click', async () => {
+  const id = state.deletingId;
+  const updatedList = state.phones.filter(p => p.id !== id);
+  await syncToFirebase(updatedList);
+  closeDeleteModal();
+  toast(`ลบข้อมูลเรียบร้อยแล้ว`, 'trash-2');
+});
+
+$('resetPricesBtn').addEventListener('click', async () => {
+  if (!confirm('ยืนยันรีเซ็ตข้อมูลทั้งหมดกลับเป็นค่าเริ่มต้นบนคลาวด์?')) return;
+  await syncToFirebase(DEFAULT_PHONES);
+  toast('คืนค่าเริ่มต้นเรียบร้อย', 'rotate-ccw');
+});
+
+async function initRealtime() {
+  bindFlashControls();
+
+  onSnapshot(CONFIG_REF, (cfgSnap) => {
+    if (cfgSnap.exists() && cfgSnap.data().adminPin) {
+      state.adminPin = cfgSnap.data().adminPin;
+    } else {
+      state.adminPin = DEFAULT_PIN;
+    }
+  });
+
+  onSnapshot(DOC_REF, async (docSnap) => {
+    if (docSnap.exists() && docSnap.data().items) {
+      state.phones = docSnap.data().items;
+    } else {
+      state.phones = DEFAULT_PHONES;
+      await syncToFirebase(DEFAULT_PHONES);
+    }
+    renderBrandTabs();
+    renderGrid();
+    refreshIcons();
+    startFlashAutoPlay();
+  });
+}
+
+initRealtime();
+</script>
+</body>
+</html>
