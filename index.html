@@ -127,6 +127,11 @@
   .detail-modal-panel { animation: detailPop .28s cubic-bezier(0.2,0.9,0.3,1.1) both; }
   @keyframes detailPop { from { opacity:0; transform: scale(.94) translateY(16px); } to { opacity:1; transform:none; } }
   [data-open-detail-card] { cursor: pointer; }
+  body.is-admin [data-open-detail-card] { cursor: default; }
+
+  /* Bigger, easier-to-tap storage selector used inside the detail modal */
+  .storage-pill-lg[data-active="true"] { background:#0f172a; color:#fff; border-color:#0f172a; }
+  .storage-pill-flash-lg[data-active="true"] { background:#dc2626; color:#fff; border-color:#dc2626; }
 </style>
 </head>
 
@@ -631,6 +636,21 @@ function storagePills(phone, activeVariant, isFlash = false) {
   </div>`;
 }
 
+// Medium-sized storage pill used in the product detail (quick-view) modal —
+// bigger than the compact card pills, but not oversized.
+function storagePillsLarge(phone, activeVariant, isFlash = false) {
+  const variants = sortedVariants(phone);
+  if (!variants.length) return '';
+  return `<div class="grid grid-cols-3 gap-1.5" data-storage-group="${phone.id}">
+    ${variants.map(v => `
+      <button type="button" data-storage-pill="${phone.id}" data-storage-value="${v.storage}"
+        data-active="${v.storage === activeVariant.storage}"
+        class="${isFlash ? 'storage-pill-flash-lg' : 'storage-pill-lg'} text-xs font-semibold px-2 py-2 rounded-lg border border-slate-200 bg-slate-50 text-slate-600 transition-colors text-center">
+        ${v.storage}
+      </button>`).join('')}
+  </div>`;
+}
+
 // Flash Sale Product Card (Compact Mobile view: w-[48%] so 2 items fit on screen)
 function flashSaleCard(p) {
   const activeVariant = getSelectedVariant(p);
@@ -946,7 +966,7 @@ function renderDetailModalContent() {
 
       <div class="mt-4">
         <p class="text-xs font-medium text-slate-500 mb-1.5">เลือกความจุ</p>
-        ${storagePills(p, activeVariant, !!p.isFlashSale)}
+        ${storagePillsLarge(p, activeVariant, !!p.isFlashSale)}
       </div>
 
       <div class="mt-4 pt-4 border-t border-slate-100 flex items-end justify-between gap-2">
@@ -1002,10 +1022,12 @@ function bindCardEvents() {
     });
   });
 
-  // Clicking anywhere on a card (image/title/etc.) opens the quick-view modal —
-  // except when the click actually landed on a storage pill or an admin control.
+  // Clicking anywhere on a card (image/title/etc.) opens the guest-facing quick-view
+  // modal — but never in Admin Mode, where clicking the card should just let admins
+  // use the normal edit/delete/toggle controls without a preview popping up.
   document.querySelectorAll('[data-open-detail-card]').forEach(card => {
     card.addEventListener('click', (e) => {
+      if (state.isAdmin) return;
       if (e.target.closest('[data-storage-pill], [data-toggle-flash], [data-toggle-stock], [data-edit], [data-delete], input, button:not([data-open-detail-card])')) return;
       openDetailModal(card.dataset.openDetailCard);
     });
@@ -1082,6 +1104,7 @@ $('clearSearchBtn').addEventListener('click', () => {
 
 function setAdminMode(on) {
   state.isAdmin = on;
+  document.body.classList.toggle('is-admin', on);
   const badges = [$('roleBadge'), $('roleBadgeMobile')];
   badges.forEach(b => {
     b.classList.toggle('badge-guest', !on);
