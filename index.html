@@ -120,6 +120,13 @@
     -webkit-user-drag: none;
     user-select: none;
   }
+
+  /* Product Detail Quick-View Modal */
+  .detail-overlay { animation: detailFade .2s ease both; }
+  @keyframes detailFade { from { opacity:0; } to { opacity:1; } }
+  .detail-modal-panel { animation: detailPop .28s cubic-bezier(0.2,0.9,0.3,1.1) both; }
+  @keyframes detailPop { from { opacity:0; transform: scale(.94) translateY(16px); } to { opacity:1; transform:none; } }
+  [data-open-detail-card] { cursor: pointer; }
 </style>
 </head>
 
@@ -439,6 +446,16 @@
 
 <div id="toastContainer" class="fixed bottom-4 left-1/2 -translate-x-1/2 z-[60] flex flex-col items-center gap-2"></div>
 
+<!-- Product Detail Quick-View Modal -->
+<div id="detailModal" class="hidden detail-overlay fixed inset-0 z-[70] flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-900/60 backdrop-blur-sm" data-modal-backdrop>
+  <div class="detail-modal-panel relative bg-white w-full sm:max-w-md rounded-t-3xl sm:rounded-3xl shadow-2xl max-h-[92vh] overflow-y-auto">
+    <button id="closeDetailModal" class="absolute top-3 right-3 z-10 w-9 h-9 rounded-full bg-white/90 backdrop-blur flex items-center justify-center shadow hover:bg-white">
+      <i data-lucide="x" class="w-5 h-5 text-slate-600"></i>
+    </button>
+    <div id="detailModalBody"></div>
+  </div>
+</div>
+
 <!-- Firebase Module & Main Logic -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
@@ -492,6 +509,7 @@ const state = {
   selectedStorage: {},
   editingId: null,
   deletingId: null,
+  detailModalId: null,
   variantRowCount: 0,
 };
 
@@ -644,7 +662,7 @@ function flashSaleCard(p) {
     </div>` : '';
 
   return `
-  <div class="w-[48%] sm:w-[32%] lg:w-[calc(25%-11px)] shrink-0 flash-card-border bg-white rounded-xl sm:rounded-2xl shadow-md p-2 sm:p-3.5 flex flex-col justify-between text-slate-900 select-none ${!p.inStock ? 'opacity-75' : ''}">
+  <div data-open-detail-card="${p.id}" class="w-[48%] sm:w-[32%] lg:w-[calc(25%-11px)] shrink-0 flash-card-border bg-white rounded-xl sm:rounded-2xl shadow-md p-2 sm:p-3.5 flex flex-col justify-between text-slate-900 select-none ${!p.inStock ? 'opacity-75' : ''}">
     <div>
       <div class="relative aspect-square rounded-lg sm:rounded-xl overflow-hidden bg-slate-50 mb-1.5 pointer-events-none">
         <img src="${p.image}" alt="${p.model}" loading="lazy" class="w-full h-full object-cover" />
@@ -678,7 +696,7 @@ function flashSaleCard(p) {
       <div class="flex items-end justify-between gap-1 mt-0.5">
         <div>
           <span class="text-[8px] sm:text-[9px] font-bold text-red-600 uppercase block">ราคาพิเศษ</span>
-          <div class="font-display font-black text-red-600 text-base sm:text-xl lg:text-2xl leading-none tracking-tight">
+          <div class="font-display font-black text-red-600 text-lg sm:text-2xl lg:text-3xl leading-none tracking-tight">
             ฿${thb(salePrice)}
           </div>
         </div>
@@ -728,7 +746,7 @@ function standardProductCard(p) {
     </div>` : '';
 
   return `
-  <article class="sim-card group bg-white rounded-xl sm:rounded-2xl border ${p.isFlashSale ? 'border-red-200 ring-1 ring-red-100' : 'border-slate-200'} shadow-card hover:shadow-cardHover transition-shadow p-2.5 sm:p-3.5 fade-in flex flex-col ${!p.inStock ? 'opacity-70' : ''}">
+  <article data-open-detail-card="${p.id}" class="sim-card group bg-white rounded-xl sm:rounded-2xl border ${p.isFlashSale ? 'border-red-200 ring-1 ring-red-100' : 'border-slate-200'} shadow-card hover:shadow-cardHover transition-shadow p-2.5 sm:p-3.5 fade-in flex flex-col ${!p.inStock ? 'opacity-70' : ''}">
     <div class="relative aspect-square rounded-lg sm:rounded-xl overflow-hidden bg-slate-50 mb-2">
       <img src="${p.image}" alt="${p.model}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
       
@@ -751,19 +769,12 @@ function standardProductCard(p) {
 
     <h3 class="font-display font-semibold text-xs sm:text-sm text-tw-ink leading-tight line-clamp-1">${p.model}</h3>
 
-    <div class="mt-1.5 space-y-0.5">
-      ${specRow('smartphone', p.specs.display)}
-      ${specRow('cpu', p.specs.chipset)}
-      ${specRow('camera', p.specs.camera)}
-      ${specRow('battery', p.specs.battery)}
-    </div>
-
     ${storagePills(p, activeVariant, false)}
 
     <div class="mt-auto pt-2.5 flex items-end justify-between gap-1.5">
       <div>
         ${hasPromo ? `<p class="price-strike text-[10px] text-slate-400 leading-none">฿${thb(activeVariant.price)}</p>` : ''}
-        <p class="font-display font-bold ${p.isFlashSale ? 'text-red-600' : 'text-tw-green'} text-sm sm:text-base leading-none mt-0.5">฿${thb(displayPrice)}</p>
+        <p class="font-display font-black ${p.isFlashSale ? 'text-red-600' : 'text-tw-green'} text-lg sm:text-xl leading-none mt-0.5">฿${thb(displayPrice)}</p>
       </div>
       ${!state.isAdmin ? `<span class="text-[9px] sm:text-[10px] font-medium px-2 py-1 rounded-md ${p.inStock ? (p.isFlashSale ? 'bg-red-50 text-red-600 font-semibold' : 'bg-emerald-50 text-emerald-600') : 'bg-slate-100 text-slate-400'}">${p.inStock ? (p.isFlashSale ? 'ดีลเด็ด' : 'พร้อมส่ง') : 'หมด'}</span>` : ''}
     </div>
@@ -893,12 +904,110 @@ function renderGrid() {
   bindCardEvents();
 }
 
+/* ---------------------------- Product Detail Quick-View Modal ---------------------------- */
+function renderDetailModalContent() {
+  const p = state.phones.find(x => x.id === state.detailModalId);
+  if (!p) { closeDetailModal(); return; }
+
+  const activeVariant = getSelectedVariant(p);
+  const hasPromo = activeVariant.promo && activeVariant.promo > 0 && activeVariant.promo < activeVariant.price;
+  const displayPrice = hasPromo ? activeVariant.promo : activeVariant.price;
+
+  $('detailModalBody').innerHTML = `
+    <div class="relative aspect-square bg-slate-50">
+      <img src="${p.image}" alt="${p.model}" class="w-full h-full object-cover" />
+      ${p.isFlashSale
+        ? `<span class="absolute top-3 left-3 inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-1 rounded-lg flash-shimmer-badge text-white shadow"><i data-lucide="zap" class="w-3.5 h-3.5 fill-amber-300 text-amber-300"></i> FLASH SALE</span>`
+        : `<span class="absolute top-3 left-3 text-[11px] font-medium px-2.5 py-1 rounded-lg bg-white/90 backdrop-blur text-slate-600 shadow-sm">${p.brand}</span>`}
+      ${!p.inStock ? '<span class="absolute inset-0 bg-black/40 flex items-center justify-center"><span class="text-xs font-bold bg-white text-red-600 px-3 py-1 rounded-full shadow">สินค้าหมด</span></span>' : ''}
+    </div>
+    <div class="p-5">
+      <p class="text-xs font-semibold ${p.isFlashSale ? 'text-red-600' : 'text-tw-green'} uppercase tracking-wide">${p.brand}</p>
+      <h2 class="font-display font-bold text-lg sm:text-xl text-tw-ink leading-snug mt-0.5">${p.model}</h2>
+
+      <div class="grid grid-cols-2 gap-2.5 mt-4">
+        <div class="flex items-start gap-2 bg-slate-50 rounded-xl p-2.5">
+          <span class="text-base leading-none">📱</span>
+          <div><p class="text-[10px] text-slate-400 font-medium">Display</p><p class="text-xs text-slate-700 leading-snug">${p.specs.display}</p></div>
+        </div>
+        <div class="flex items-start gap-2 bg-slate-50 rounded-xl p-2.5">
+          <span class="text-base leading-none">⚙️</span>
+          <div><p class="text-[10px] text-slate-400 font-medium">Chipset</p><p class="text-xs text-slate-700 leading-snug">${p.specs.chipset}</p></div>
+        </div>
+        <div class="flex items-start gap-2 bg-slate-50 rounded-xl p-2.5">
+          <span class="text-base leading-none">📷</span>
+          <div><p class="text-[10px] text-slate-400 font-medium">Camera</p><p class="text-xs text-slate-700 leading-snug">${p.specs.camera}</p></div>
+        </div>
+        <div class="flex items-start gap-2 bg-slate-50 rounded-xl p-2.5">
+          <span class="text-base leading-none">🔋</span>
+          <div><p class="text-[10px] text-slate-400 font-medium">Battery</p><p class="text-xs text-slate-700 leading-snug">${p.specs.battery}</p></div>
+        </div>
+      </div>
+
+      <div class="mt-4">
+        <p class="text-xs font-medium text-slate-500 mb-1.5">เลือกความจุ</p>
+        ${storagePills(p, activeVariant, !!p.isFlashSale)}
+      </div>
+
+      <div class="mt-4 pt-4 border-t border-slate-100 flex items-end justify-between gap-2">
+        <div>
+          ${hasPromo ? `<p class="price-strike text-xs text-slate-400">฿${thb(activeVariant.price)}</p>` : ''}
+          <p class="font-display font-black ${p.isFlashSale ? 'text-red-600' : 'text-tw-green'} text-2xl sm:text-3xl leading-none mt-0.5">฿${thb(displayPrice)}</p>
+        </div>
+        <span class="text-[11px] font-semibold px-3 py-1.5 rounded-lg shrink-0 ${p.inStock ? (p.isFlashSale ? 'bg-red-50 text-red-600' : 'bg-emerald-50 text-emerald-600') : 'bg-slate-100 text-slate-400'}">${p.inStock ? (p.isFlashSale ? 'ดีลเด็ด พร้อมส่ง' : 'พร้อมส่ง') : 'สินค้าหมด'}</span>
+      </div>
+    </div>
+  `;
+  refreshIcons();
+  bindDetailModalStoragePills();
+}
+
+function bindDetailModalStoragePills() {
+  document.querySelectorAll('#detailModalBody [data-storage-pill]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.storagePill;
+      state.selectedStorage[id] = btn.dataset.storageValue;
+      renderDetailModalContent();
+      renderGrid();
+    });
+  });
+}
+
+function openDetailModal(id) {
+  state.detailModalId = id;
+  renderDetailModalContent();
+  $('detailModal').classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+  refreshIcons();
+}
+
+function closeDetailModal() {
+  $('detailModal').classList.add('hidden');
+  state.detailModalId = null;
+  document.body.style.overflow = '';
+}
+
+$('closeDetailModal').addEventListener('click', closeDetailModal);
+$('detailModal').addEventListener('click', (e) => { if (e.target === $('detailModal')) closeDetailModal(); });
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && !$('detailModal').classList.contains('hidden')) closeDetailModal();
+});
+
 function bindCardEvents() {
   document.querySelectorAll('[data-storage-pill]').forEach(btn => {
     btn.addEventListener('click', () => {
       const id = btn.dataset.storagePill;
       state.selectedStorage[id] = btn.dataset.storageValue;
       renderGrid();
+    });
+  });
+
+  // Clicking anywhere on a card (image/title/etc.) opens the quick-view modal —
+  // except when the click actually landed on a storage pill or an admin control.
+  document.querySelectorAll('[data-open-detail-card]').forEach(card => {
+    card.addEventListener('click', (e) => {
+      if (e.target.closest('[data-storage-pill], [data-toggle-flash], [data-toggle-stock], [data-edit], [data-delete], input, button:not([data-open-detail-card])')) return;
+      openDetailModal(card.dataset.openDetailCard);
     });
   });
 
