@@ -195,7 +195,7 @@
         </div>
         <div>
           <h2 class="font-display font-black text-xl sm:text-2xl lg:text-3xl tracking-wide flex items-center gap-1.5 text-white">
-            FLASH SALE <span class="text-[10px] sm:text-xs font-bold bg-amber-400 text-slate-950 px-2 py-0.5 rounded uppercase tracking-normal">ลดแรงจำกัดเวลา</span>
+            FLASH SALE <span id="flashDateBadge" class="text-xs sm:text-sm font-bold bg-amber-400 text-slate-950 px-2.5 py-1 rounded-md uppercase tracking-normal">ลดแรงจำกัดเวลา</span>
           </h2>
           <p class="text-[11px] sm:text-xs text-red-100 font-light">โปรเด็ดราคาพิเศษ ดีลดีที่สุดประจำวัน</p>
         </div>
@@ -251,6 +251,9 @@
     </button>
     <button id="changePinBtn" class="flex items-center gap-1.5 text-xs font-medium bg-white/10 hover:bg-white/20 transition-colors px-3 py-2 rounded-lg">
       <i data-lucide="key" class="w-3.5 h-3.5"></i> เปลี่ยน PIN แอดมิน
+    </button>
+    <button id="flashScheduleBtn" class="flex items-center gap-1.5 text-xs font-medium bg-white/10 hover:bg-white/20 transition-colors px-3 py-2 rounded-lg">
+      <i data-lucide="calendar-clock" class="w-3.5 h-3.5"></i> ตั้งเวลา Flash Sale
     </button>
     <button id="resetPricesBtn" class="flex items-center gap-1.5 text-xs font-medium bg-white/10 hover:bg-white/20 transition-colors px-3 py-2 rounded-lg">
       <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> รีเซ็ตค่าเริ่มต้น
@@ -334,6 +337,37 @@
       <button type="submit" class="mt-2 w-full h-11 rounded-xl bg-tw-green hover:bg-tw-greenLight text-white font-medium text-sm transition-colors flex items-center justify-center gap-2">
         <i data-lucide="check" class="w-4 h-4"></i> ยืนยันเปลี่ยน PIN
       </button>
+    </form>
+  </div>
+</div>
+
+<!-- Flash Sale Schedule Modal -->
+<div id="flashScheduleModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50" data-modal-backdrop>
+  <div class="bg-white w-full max-w-xs rounded-3xl shadow-2xl p-6 fade-in">
+    <div class="flex justify-between items-start mb-4">
+      <div class="w-11 h-11 rounded-2xl bg-red-600 flex items-center justify-center">
+        <i data-lucide="calendar-clock" class="w-5 h-5 text-white"></i>
+      </div>
+      <button id="closeFlashScheduleModal" class="text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-5 h-5"></i></button>
+    </div>
+    <h3 class="font-display font-semibold text-lg">ตั้งเวลาแคมเปญ Flash Sale</h3>
+    <p class="text-[11px] text-slate-500 mt-1 mb-3">ช่วงวันที่นี้จะแสดงบนแถบ FLASH SALE ให้ลูกค้าเห็น เช่น "FLASH SALE (10 ก.ย. - 20 ก.ย.)"</p>
+    <form id="flashScheduleForm" class="space-y-3">
+      <div>
+        <label class="text-[11px] font-medium text-slate-500">วันที่เริ่ม</label>
+        <input id="flashStartInput" type="date" class="w-full h-10 px-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-tw-green/40 focus:outline-none text-sm" />
+      </div>
+      <div>
+        <label class="text-[11px] font-medium text-slate-500">วันที่สิ้นสุด</label>
+        <input id="flashEndInput" type="date" class="w-full h-10 px-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-tw-green/40 focus:outline-none text-sm" />
+      </div>
+      <p id="flashScheduleError" class="hidden text-xs text-red-500 text-center"></p>
+      <div class="flex gap-2 pt-1">
+        <button type="button" id="clearFlashScheduleBtn" class="flex-1 h-11 rounded-xl border border-slate-200 text-slate-600 font-medium text-sm hover:bg-slate-50">ล้างวันที่</button>
+        <button type="submit" class="flex-1 h-11 rounded-xl bg-red-600 hover:bg-red-700 text-white font-medium text-sm transition-colors flex items-center justify-center gap-2">
+          <i data-lucide="check" class="w-4 h-4"></i> บันทึก
+        </button>
+      </div>
     </form>
   </div>
 </div>
@@ -424,6 +458,19 @@
         <p class="text-[11px] text-slate-400 mt-1.5">ช่อง "ราคาโปร" จะใช้เป็นราคา Flash Sale</p>
       </div>
 
+      <div class="pt-2 border-t border-slate-100">
+        <div class="flex items-center justify-between mt-3 mb-2">
+          <label class="text-xs font-medium text-slate-500 flex items-center gap-1">
+            <i data-lucide="palette" class="w-3.5 h-3.5 text-slate-400"></i> สี (Colors)
+          </label>
+          <button type="button" id="addColorRowBtn" class="flex items-center gap-1 text-[11px] font-medium text-tw-green hover:text-tw-greenLight">
+            <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i> เพิ่มสี
+          </button>
+        </div>
+        <div id="colorRows" class="space-y-2"></div>
+        <p class="text-[11px] text-slate-400 mt-1.5">ใส่ชื่อสีเต็ม (เช่น "ม่วง (Lavender)"), เลือก/กรอกรหัสสี HEX เอง หรือใส่ลิงก์รูปเฉพาะสีนั้นแล้วกด "ดึงสีจากรูป" เพื่อประมาณรหัสสีอัตโนมัติ — ไม่ใส่สีก็ได้ถ้าไม่ต้องการ</p>
+      </div>
+
       <div class="flex gap-2 pt-2">
         <button type="button" id="cancelEditBtn" class="flex-1 h-12 rounded-2xl border border-slate-200 text-slate-600 font-medium hover:bg-slate-50">ยกเลิก</button>
         <button type="submit" class="flex-1 h-12 rounded-2xl bg-tw-green hover:bg-tw-greenLight text-white font-medium flex items-center justify-center gap-2">
@@ -512,10 +559,14 @@ const state = {
   activeBrand: 'All',
   query: '',
   selectedStorage: {},
+  selectedColor: {},
   editingId: null,
   deletingId: null,
   detailModalId: null,
   variantRowCount: 0,
+  colorRowCount: 0,
+  flashSaleStart: null,
+  flashSaleEnd: null,
 };
 
 let flashAutoPlayTimer = null;
@@ -537,6 +588,18 @@ async function saveAdminPin(newPin) {
     return true;
   } catch (err) {
     console.error("Save PIN error:", err);
+    return false;
+  }
+}
+
+async function saveFlashSchedule(startDate, endDate) {
+  try {
+    await setDoc(CONFIG_REF, { flashSaleStart: startDate || null, flashSaleEnd: endDate || null }, { merge: true });
+    state.flashSaleStart = startDate || null;
+    state.flashSaleEnd = endDate || null;
+    return true;
+  } catch (err) {
+    console.error("Save flash schedule error:", err);
     return false;
   }
 }
@@ -579,6 +642,66 @@ function getSelectedVariant(phone) {
   return variants.find(v => v.storage === wanted) || variants[0];
 }
 
+/* ---------------------------- Flash Sale date-range badge ---------------------------- */
+const THAI_MONTHS_SHORT = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+
+function formatThaiShortDate(dateStr) {
+  // dateStr comes from an <input type="date"> value, e.g. "2026-09-10"
+  const [y, m, d] = dateStr.split('-').map(Number);
+  if (!y || !m || !d) return '';
+  return `${d} ${THAI_MONTHS_SHORT[m - 1]}`;
+}
+
+function updateFlashDateBadge() {
+  const badge = $('flashDateBadge');
+  if (!badge) return;
+  if (state.flashSaleStart && state.flashSaleEnd) {
+    badge.textContent = `${formatThaiShortDate(state.flashSaleStart)} - ${formatThaiShortDate(state.flashSaleEnd)}`;
+  } else {
+    badge.textContent = 'ลดแรงจำกัดเวลา';
+  }
+}
+
+/* ---------------------------- Color variant helpers ---------------------------- */
+function getSelectedColor(phone) {
+  if (!phone.colors || phone.colors.length === 0) return null;
+  const wanted = state.selectedColor[phone.id];
+  return phone.colors.find(c => c.name === wanted) || phone.colors[0];
+}
+
+// Cards/modal show the color-specific photo when one is set for the selected color,
+// otherwise they fall back to the phone's main product image.
+function getDisplayImage(phone) {
+  const color = getSelectedColor(phone);
+  return (color && color.image) ? color.image : phone.image;
+}
+
+function colorSwatches(phone) {
+  if (!phone.colors || phone.colors.length === 0) return '';
+  const selected = getSelectedColor(phone);
+  return `<div class="flex flex-wrap gap-1.5 mt-1.5" data-color-group="${phone.id}">
+    ${phone.colors.map(c => `
+      <button type="button" data-color-pill="${phone.id}" data-color-value="${c.name}"
+        title="${c.name}" style="background:${c.hex || '#e2e8f0'}"
+        class="w-4 h-4 sm:w-5 sm:h-5 rounded-full border-2 transition-all ${selected && selected.name === c.name ? 'border-tw-green ring-2 ring-tw-green/30 scale-110' : 'border-white shadow'}"></button>`).join('')}
+  </div>`;
+}
+
+// Bigger swatches + a text label with the full color name, used in the detail modal.
+function colorSwatchesLarge(phone) {
+  if (!phone.colors || phone.colors.length === 0) return '';
+  const selected = getSelectedColor(phone);
+  return `<div>
+    <div class="flex flex-wrap gap-2" data-color-group="${phone.id}">
+      ${phone.colors.map(c => `
+        <button type="button" data-color-pill="${phone.id}" data-color-value="${c.name}"
+          title="${c.name}" style="background:${c.hex || '#e2e8f0'}"
+          class="w-8 h-8 rounded-full border-2 transition-all ${selected && selected.name === c.name ? 'border-tw-green ring-2 ring-tw-green/30 scale-110' : 'border-slate-200'}"></button>`).join('')}
+    </div>
+    ${selected ? `<p class="text-xs text-slate-500 mt-1.5">สี: <span class="font-semibold text-slate-700">${selected.name}</span></p>` : ''}
+  </div>`;
+}
+
 function renderBrandTabs() {
   const uniqueBrands = ['All', ...new Set(state.phones.map(p => p.brand.trim()).filter(Boolean))];
   $('brandTabs').innerHTML = uniqueBrands.map(b => {
@@ -610,7 +733,8 @@ function getFilteredPhones() {
     if (!q) return true;
     const haystack = [
       p.model, p.brand, p.specs.display, p.specs.chipset, p.specs.camera, p.specs.battery,
-      ...p.variants.map(v => v.storage)
+      ...p.variants.map(v => v.storage),
+      ...(p.colors || []).map(c => c.name)
     ].join(' ').toLowerCase();
     return haystack.includes(q);
   });
@@ -685,7 +809,7 @@ function flashSaleCard(p) {
   <div data-open-detail-card="${p.id}" class="w-[48%] sm:w-[32%] lg:w-[calc(25%-11px)] shrink-0 flash-card-border bg-white rounded-xl sm:rounded-2xl shadow-md p-2 sm:p-3.5 flex flex-col justify-between text-slate-900 select-none ${!p.inStock ? 'opacity-75' : ''}">
     <div>
       <div class="relative aspect-square rounded-lg sm:rounded-xl overflow-hidden bg-slate-50 mb-1.5 pointer-events-none">
-        <img src="${p.image}" alt="${p.model}" loading="lazy" class="w-full h-full object-cover" />
+        <img src="${getDisplayImage(p)}" alt="${p.model}" loading="lazy" class="w-full h-full object-cover" />
         
         <!-- Clean Tag on Top Left -->
         <span class="flash-badge-corner flash-shimmer-badge absolute top-0 left-0 text-white font-black text-[9px] sm:text-[10px] pl-1.5 pr-3 py-0.5 flex items-center gap-0.5 shadow">
@@ -705,6 +829,7 @@ function flashSaleCard(p) {
       <h3 class="font-display font-bold text-xs sm:text-sm text-slate-900 leading-snug line-clamp-1 mt-0.5">${p.model}</h3>
 
       ${storagePills(p, activeVariant, true)}
+      ${colorSwatches(p)}
     </div>
 
     <div class="mt-2 pt-2 border-t border-slate-100">
@@ -768,7 +893,7 @@ function standardProductCard(p) {
   return `
   <article data-open-detail-card="${p.id}" class="sim-card group bg-white rounded-xl sm:rounded-2xl border ${p.isFlashSale ? 'border-red-200 ring-1 ring-red-100' : 'border-slate-200'} shadow-card hover:shadow-cardHover transition-shadow p-2.5 sm:p-3.5 fade-in flex flex-col ${!p.inStock ? 'opacity-70' : ''}">
     <div class="relative aspect-square rounded-lg sm:rounded-xl overflow-hidden bg-slate-50 mb-2">
-      <img src="${p.image}" alt="${p.model}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+      <img src="${getDisplayImage(p)}" alt="${p.model}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
       
       <!-- Brand Tag (Top Left) -->
       <span class="absolute top-1.5 left-1.5 text-[9px] sm:text-[10px] font-medium px-1.5 py-0.5 rounded-md bg-white/90 backdrop-blur text-slate-600 shadow-sm">${p.brand}</span>
@@ -790,6 +915,7 @@ function standardProductCard(p) {
     <h3 class="font-display font-semibold text-xs sm:text-sm text-tw-ink leading-tight line-clamp-1">${p.model}</h3>
 
     ${storagePills(p, activeVariant, false)}
+    ${colorSwatches(p)}
 
     <div class="mt-auto pt-2.5 flex items-end justify-between gap-1.5">
       <div>
@@ -935,7 +1061,7 @@ function renderDetailModalContent() {
 
   $('detailModalBody').innerHTML = `
     <div class="relative aspect-square bg-slate-50">
-      <img src="${p.image}" alt="${p.model}" class="w-full h-full object-cover" />
+      <img src="${getDisplayImage(p)}" alt="${p.model}" class="w-full h-full object-cover" />
       ${p.isFlashSale
         ? `<span class="absolute top-3 left-3 inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-1 rounded-lg flash-shimmer-badge text-white shadow"><i data-lucide="zap" class="w-3.5 h-3.5 fill-amber-300 text-amber-300"></i> FLASH SALE</span>`
         : `<span class="absolute top-3 left-3 text-[11px] font-medium px-2.5 py-1 rounded-lg bg-white/90 backdrop-blur text-slate-600 shadow-sm">${p.brand}</span>`}
@@ -964,6 +1090,12 @@ function renderDetailModalContent() {
         </div>
       </div>
 
+      ${p.colors && p.colors.length ? `
+      <div class="mt-4">
+        <p class="text-xs font-medium text-slate-500 mb-1.5">เลือกสี</p>
+        ${colorSwatchesLarge(p)}
+      </div>` : ''}
+
       <div class="mt-4">
         <p class="text-xs font-medium text-slate-500 mb-1.5">เลือกความจุ</p>
         ${storagePillsLarge(p, activeVariant, !!p.isFlashSale)}
@@ -980,6 +1112,7 @@ function renderDetailModalContent() {
   `;
   refreshIcons();
   bindDetailModalStoragePills();
+  bindDetailModalColorPills();
 }
 
 function bindDetailModalStoragePills() {
@@ -987,6 +1120,17 @@ function bindDetailModalStoragePills() {
     btn.addEventListener('click', () => {
       const id = btn.dataset.storagePill;
       state.selectedStorage[id] = btn.dataset.storageValue;
+      renderDetailModalContent();
+      renderGrid();
+    });
+  });
+}
+
+function bindDetailModalColorPills() {
+  document.querySelectorAll('#detailModalBody [data-color-pill]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.colorPill;
+      state.selectedColor[id] = btn.dataset.colorValue;
       renderDetailModalContent();
       renderGrid();
     });
@@ -1022,13 +1166,21 @@ function bindCardEvents() {
     });
   });
 
+  document.querySelectorAll('[data-color-pill]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.colorPill;
+      state.selectedColor[id] = btn.dataset.colorValue;
+      renderGrid();
+    });
+  });
+
   // Clicking anywhere on a card (image/title/etc.) opens the guest-facing quick-view
   // modal — but never in Admin Mode, where clicking the card should just let admins
   // use the normal edit/delete/toggle controls without a preview popping up.
   document.querySelectorAll('[data-open-detail-card]').forEach(card => {
     card.addEventListener('click', (e) => {
       if (state.isAdmin) return;
-      if (e.target.closest('[data-storage-pill], [data-toggle-flash], [data-toggle-stock], [data-edit], [data-delete], input, button:not([data-open-detail-card])')) return;
+      if (e.target.closest('[data-storage-pill], [data-color-pill], [data-toggle-flash], [data-toggle-stock], [data-edit], [data-delete], input, button:not([data-open-detail-card])')) return;
       openDetailModal(card.dataset.openDetailCard);
     });
   });
@@ -1198,6 +1350,50 @@ $('changePinForm').addEventListener('submit', async (e) => {
   }
 });
 
+function openFlashScheduleModal() {
+  $('flashScheduleModal').classList.remove('hidden');
+  $('flashScheduleError').classList.add('hidden');
+  $('flashStartInput').value = state.flashSaleStart || '';
+  $('flashEndInput').value = state.flashSaleEnd || '';
+  refreshIcons();
+}
+function closeFlashScheduleModal() { $('flashScheduleModal').classList.add('hidden'); }
+$('flashScheduleBtn').addEventListener('click', openFlashScheduleModal);
+$('closeFlashScheduleModal').addEventListener('click', closeFlashScheduleModal);
+$('flashScheduleModal').addEventListener('click', (e) => { if (e.target === $('flashScheduleModal')) closeFlashScheduleModal(); });
+
+$('clearFlashScheduleBtn').addEventListener('click', async () => {
+  const ok = await saveFlashSchedule(null, null);
+  if (ok) {
+    updateFlashDateBadge();
+    closeFlashScheduleModal();
+    toast('ล้างช่วงเวลา Flash Sale แล้ว', 'calendar-clock');
+  }
+});
+
+$('flashScheduleForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const start = $('flashStartInput').value;
+  const end = $('flashEndInput').value;
+  const errorEl = $('flashScheduleError');
+
+  if (start && end && start > end) {
+    errorEl.textContent = 'วันที่เริ่มต้องมาก่อนวันที่สิ้นสุด';
+    errorEl.classList.remove('hidden');
+    return;
+  }
+
+  const ok = await saveFlashSchedule(start, end);
+  if (ok) {
+    updateFlashDateBadge();
+    closeFlashScheduleModal();
+    toast('บันทึกช่วงเวลา Flash Sale แล้ว', 'calendar-clock');
+  } else {
+    errorEl.textContent = 'ไม่สามารถบันทึกได้ โปรดลองใหม่';
+    errorEl.classList.remove('hidden');
+  }
+});
+
 $('editBrand').addEventListener('change', (e) => {
   if (e.target.value === 'Other') {
     $('customBrandContainer').classList.remove('hidden');
@@ -1251,6 +1447,112 @@ function bindVariantRowRemoval() {
 
 $('addVariantRowBtn').addEventListener('click', () => addVariantRow('', '', ''));
 
+/* ---------------------------- Color rows (admin) ---------------------------- */
+function expandShortHex(hex) {
+  const h = hex.replace('#', '');
+  if (h.length === 3) return '#' + h.split('').map(c => c + c).join('');
+  return hex;
+}
+
+function colorRowHTML(rowId, name, hex, image) {
+  const validHex = hex && /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(hex) ? expandShortHex(hex) : '#cccccc';
+  return `
+  <div class="space-y-1.5 p-2.5 rounded-lg border border-slate-200 bg-slate-50/50" data-color-row="${rowId}">
+    <div class="flex items-center gap-1.5">
+      <input type="text" placeholder="ชื่อสี เช่น ม่วง (Lavender)" value="${name ?? ''}" data-color-name
+        class="flex-1 h-9 rounded-lg border border-slate-200 px-2.5 text-xs focus:outline-none focus:ring-1 focus:ring-tw-green" />
+      <input type="color" value="${validHex}" data-color-hex-picker
+        class="w-9 h-9 shrink-0 rounded-lg border border-slate-200 cursor-pointer p-0.5" />
+      <input type="text" placeholder="#RRGGBB" value="${hex ?? ''}" data-color-hex
+        class="w-24 h-9 shrink-0 rounded-lg border border-slate-200 px-2 text-xs font-mono focus:outline-none focus:ring-1 focus:ring-tw-green" />
+      <button type="button" data-remove-color-row="${rowId}" class="h-9 w-9 shrink-0 flex items-center justify-center rounded-lg border border-slate-200 text-slate-400 hover:text-red-500 hover:border-red-300">
+        <i data-lucide="x" class="w-4 h-4"></i>
+      </button>
+    </div>
+    <div class="flex items-center gap-1.5">
+      <input type="text" placeholder="ลิงก์รูปภาพสีนี้ (ไม่บังคับ)" value="${image ?? ''}" data-color-image
+        class="flex-1 h-9 rounded-lg border border-slate-200 px-2.5 text-xs focus:outline-none focus:ring-1 focus:ring-tw-green" />
+      <button type="button" data-extract-color="${rowId}" class="h-9 px-2.5 shrink-0 flex items-center gap-1 rounded-lg border border-slate-200 text-slate-500 hover:text-tw-green hover:border-tw-green text-[10px] font-medium whitespace-nowrap">
+        <i data-lucide="pipette" class="w-3.5 h-3.5"></i> ดึงสีจากรูป
+      </button>
+    </div>
+  </div>`;
+}
+
+function addColorRow(name, hex, image) {
+  state.colorRowCount += 1;
+  const rowId = state.colorRowCount;
+  $('colorRows').insertAdjacentHTML('beforeend', colorRowHTML(rowId, name, hex, image));
+  refreshIcons();
+  bindColorRowInteractions();
+}
+
+function extractColorForRow(rowId) {
+  const row = document.querySelector(`[data-color-row="${rowId}"]`);
+  const imgUrl = row.querySelector('[data-color-image]').value.trim();
+  if (!imgUrl) { toast('กรุณาใส่ลิงก์รูปภาพก่อนดึงสี', 'alert-triangle'); return; }
+
+  const img = new Image();
+  img.crossOrigin = 'anonymous';
+  img.onload = () => {
+    try {
+      const size = 24;
+      const canvas = document.createElement('canvas');
+      canvas.width = size;
+      canvas.height = size;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, size, size);
+      const data = ctx.getImageData(0, 0, size, size).data;
+      let r = 0, g = 0, b = 0, count = 0;
+      for (let i = 0; i < data.length; i += 4) {
+        r += data[i]; g += data[i + 1]; b += data[i + 2]; count++;
+      }
+      r = Math.round(r / count); g = Math.round(g / count); b = Math.round(b / count);
+      const hex = '#' + [r, g, b].map(v => v.toString(16).padStart(2, '0')).join('');
+      row.querySelector('[data-color-hex]').value = hex;
+      row.querySelector('[data-color-hex-picker]').value = hex;
+      toast('ดึงสีจากรูปสำเร็จ (ประมาณค่าเฉลี่ยสี)', 'pipette');
+    } catch (err) {
+      console.error('Color extraction failed:', err);
+      toast('ดึงสีจากรูปไม่สำเร็จ (รูปอาจติดข้อจำกัด CORS) กรุณาใส่รหัสสี HEX เอง', 'alert-triangle');
+    }
+  };
+  img.onerror = () => toast('โหลดรูปภาพไม่สำเร็จ ตรวจสอบลิงก์อีกครั้ง', 'alert-triangle');
+  img.src = imgUrl;
+}
+
+function bindColorRowInteractions() {
+  document.querySelectorAll('[data-remove-color-row]').forEach(btn => {
+    btn.onclick = () => {
+      const row = document.querySelector(`[data-color-row="${btn.dataset.removeColorRow}"]`);
+      if (row) row.remove();
+    };
+  });
+
+  document.querySelectorAll('[data-color-hex-picker]').forEach(picker => {
+    picker.oninput = () => {
+      const row = picker.closest('[data-color-row]');
+      row.querySelector('[data-color-hex]').value = picker.value;
+    };
+  });
+
+  document.querySelectorAll('[data-color-hex]').forEach(textInput => {
+    textInput.oninput = () => {
+      const val = textInput.value.trim();
+      if (/^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(val)) {
+        const row = textInput.closest('[data-color-row]');
+        row.querySelector('[data-color-hex-picker]').value = expandShortHex(val);
+      }
+    };
+  });
+
+  document.querySelectorAll('[data-extract-color]').forEach(btn => {
+    btn.onclick = () => extractColorForRow(btn.dataset.extractColor);
+  });
+}
+
+$('addColorRowBtn').addEventListener('click', () => addColorRow('', '', ''));
+
 function openEditModal(id) {
   state.editingId = id || null;
   const isNew = !id;
@@ -1291,6 +1593,12 @@ function openEditModal(id) {
     sortedVariants(p).forEach(v => addVariantRow(v.storage, v.price, v.promo));
   } else {
     addVariantRow('128GB', '', '');
+  }
+
+  $('colorRows').innerHTML = '';
+  state.colorRowCount = 0;
+  if (p && p.colors && p.colors.length) {
+    p.colors.forEach(c => addColorRow(c.name, c.hex, c.image));
   }
 
   $('editModal').classList.remove('hidden');
@@ -1346,15 +1654,28 @@ $('editForm').addEventListener('submit', async (e) => {
 
   if (variants.length === 0) { toast('กรุณาระบุความจุและราคาอย่างน้อย 1 รายการ', 'alert-triangle'); return; }
 
+  const colors = [];
+  document.querySelectorAll('[data-color-row]').forEach(row => {
+    const name = row.querySelector('[data-color-name]').value.trim();
+    if (!name) return; // silently skip incomplete rows
+    const hexRaw = row.querySelector('[data-color-hex]').value.trim();
+    const image = row.querySelector('[data-color-image]').value.trim();
+    colors.push({
+      name,
+      hex: /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(hexRaw) ? hexRaw : '#cccccc',
+      image: image || null,
+    });
+  });
+
   let updatedList = [...state.phones];
   if (id) {
     const idx = updatedList.findIndex(p => p.id === id);
     if (idx !== -1) {
-      updatedList[idx] = { ...updatedList[idx], brand, model, image, inStock, isFlashSale, specs, variants };
+      updatedList[idx] = { ...updatedList[idx], brand, model, image, inStock, isFlashSale, specs, variants, colors };
     }
   } else {
     const newId = (brand.toLowerCase().replace(/[^a-z0-9]/g, '').slice(0,3) || 'ph') + '-' + Date.now();
-    updatedList.unshift({ id: newId, brand, model, image, inStock, isFlashSale, specs, variants });
+    updatedList.unshift({ id: newId, brand, model, image, inStock, isFlashSale, specs, variants, colors });
   }
 
   await syncToFirebase(updatedList);
@@ -1396,6 +1717,11 @@ async function initRealtime() {
     } else {
       state.adminPin = DEFAULT_PIN;
     }
+    if (cfgSnap.exists()) {
+      state.flashSaleStart = cfgSnap.data().flashSaleStart || null;
+      state.flashSaleEnd = cfgSnap.data().flashSaleEnd || null;
+    }
+    updateFlashDateBadge();
   });
 
   onSnapshot(DOC_REF, async (docSnap) => {
