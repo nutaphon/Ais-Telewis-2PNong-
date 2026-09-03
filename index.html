@@ -531,25 +531,114 @@ const CONFIG_REF = doc(db, "telewiz_store", "settings");
 const DEFAULT_PIN = '046057';
 
 const DEFAULT_PHONES = [
-  // Apple
-  { id:'ap-17-lavender', brand:'Apple', model:'iPhone 17 (Lavender)', image:'https://placehold.co/600x600/1e293b/ffffff?text=iPhone+17', inStock:true, isFlashSale:true, specs:{ display:'6.1" (OLED) Promotion 120Hz', chipset:'Apple A19', camera:'48 MP / 24MP', battery:'4298 mAh' }, variants:[ {storage:'256GB', price:29900, promo:28500} ] },
-  { id:'ap-17pm', brand:'Apple', model:'iPhone 17 Pro Max', image:'https://placehold.co/600x600/0f172a/ffffff?text=iPhone+17+Pro+Max', inStock:true, isFlashSale:true, specs:{ display:'6.9" OLED 120Hz', chipset:'Apple A19 Pro', camera:'48MP Triple', battery:'4850mAh' }, variants:[ {storage:'256GB', price:51900, promo:47900}, {storage:'512GB', price:58900, promo:54900}, {storage:'1TB', price:65900, promo:null} ] },
-  { id:'ap-17p', brand:'Apple', model:'iPhone 17 Pro', image:'https://placehold.co/600x600/0f172a/ffffff?text=iPhone+17+Pro', inStock:true, isFlashSale:false, specs:{ display:'6.3" OLED 120Hz', chipset:'Apple A19 Pro', camera:'48MP Triple', battery:'3800mAh' }, variants:[ {storage:'256GB', price:45900, promo:null}, {storage:'512GB', price:53900, promo:null} ] },
-  { id:'ap-16pm', brand:'Apple', model:'iPhone 16 Pro Max', image:'https://placehold.co/600x600/1c1c1e/ffffff?text=iPhone+16+Pro+Max', inStock:true, isFlashSale:true, specs:{ display:'6.9" OLED 120Hz', chipset:'Apple A18 Pro', camera:'48MP Triple', battery:'4685mAh' }, variants:[ {storage:'256GB', price:48900, promo:46900}, {storage:'512GB', price:55900, promo:null} ] },
-  { id:'ap-16-pink', brand:'Apple', model:'iPhone 16 (Pink)', image:'https://placehold.co/600x600/1c1c1e/ffffff?text=iPhone+16', inStock:true, isFlashSale:true, specs:{ display:'6.1" OLED 60Hz', chipset:'Apple A18', camera:'48MP Dual', battery:'3561mAh' }, variants:[ {storage:'128GB', price:29900, promo:25500}, {storage:'256GB', price:33900, promo:null}, {storage:'512GB', price:41900, promo:null} ] },
+  // ---------------- APPLE ----------------
+  { id:'ap-iphone15', brand:'Apple', model:'iPhone 15', image:'https://fdn2.gsmarena.com/vv/bigpic/apple-iphone-15.jpg', inStock:true, isFlashSale:false,
+    specs:{ display:'6.1" OLED 60Hz', chipset:'Apple A16 Bionic', camera:'48MP หลัก + 12MP อัลตร้าไวด์', battery:'3349mAh ชาร์จเร็ว 20W' },
+    variants:[ {storage:'128GB', price:27900, promo:null} ],
+    colors:[ {name:'ดำ (Black)', hex:'#1c1c1e', image:null}, {name:'ขาว (White)', hex:'#f2f2f2', image:null} ] },
 
-  // Samsung
-  { id:'sm-s26u', brand:'Samsung', model:'Galaxy S26 Ultra', image:'https://placehold.co/600x600/0284c7/ffffff?text=S26+Ultra', inStock:true, isFlashSale:true, specs:{ display:'6.9" AMOLED 2X 120Hz', chipset:'Snapdragon 8 Elite', camera:'200MP Quad', battery:'5200mAh' }, variants:[ {storage:'256GB', price:46900, promo:41900}, {storage:'512GB', price:50900, promo:null} ] },
-  { id:'sm-s26', brand:'Samsung', model:'Galaxy S26', image:'https://placehold.co/600x600/0369a1/ffffff?text=Galaxy+S26', inStock:true, isFlashSale:false, specs:{ display:'6.3" AMOLED 2X 120Hz', chipset:'Exynos 2600', camera:'50MP Triple', battery:'4200mAh' }, variants:[ {storage:'128GB', price:28900, promo:null}, {storage:'256GB', price:31900, promo:null} ] },
-  { id:'sm-a57', brand:'Samsung', model:'Galaxy A57', image:'https://placehold.co/600x600/38bdf8/ffffff?text=Galaxy+A57', inStock:true, isFlashSale:false, specs:{ display:'6.6" AMOLED 120Hz', chipset:'Exynos 1580', camera:'50MP Triple', battery:'5000mAh' }, variants:[ {storage:'128GB', price:14999, promo:13500}, {storage:'256GB', price:16999, promo:null} ] },
-  { id:'sm-a37', brand:'Samsung', model:'Galaxy A37', image:'https://placehold.co/600x600/7dd3fc/ffffff?text=Galaxy+A37', inStock:true, isFlashSale:false, specs:{ display:'6.6" AMOLED 120Hz', chipset:'Exynos 1480', camera:'50MP Triple', battery:'5000mAh' }, variants:[ {storage:'128GB', price:11499, promo:null} ] },
-  { id:'sm-a27', brand:'Samsung', model:'Galaxy A27', image:'https://placehold.co/600x600/bae6fd/0f172a?text=Galaxy+A27', inStock:true, isFlashSale:false, specs:{ display:'6.5" AMOLED 120Hz', chipset:'Dimensity 6300', camera:'50MP Dual', battery:'5000mAh' }, variants:[ {storage:'128GB', price:8999, promo:7999} ] },
+  { id:'ap-iphone17', brand:'Apple', model:'iPhone 17', image:'https://fdn2.gsmarena.com/vv/bigpic/apple-iphone-17.jpg', inStock:true, isFlashSale:false,
+    specs:{ display:'6.3" OLED ProMotion 120Hz', chipset:'Apple A19', camera:'48MP หลัก + 12MP อัลตร้าไวด์', battery:'3692mAh ชาร์จเร็ว 25W' },
+    variants:[ {storage:'256GB', price:36900, promo:null} ],
+    colors:[ {name:'เขียว (Sage)', hex:'#a8b89a', image:null}, {name:'ขาว (White)', hex:'#f2f2f2', image:null}, {name:'ม่วง (Lavender)', hex:'#c9c2e0', image:null} ] },
 
-  // Vivo & OPPO & Other
-  { id:'vv-x300p', brand:'Vivo', model:'Vivo X300 Pro', image:'https://placehold.co/600x600/475569/ffffff?text=Vivo+X300+Pro', inStock:true, isFlashSale:true, specs:{ display:'6.78" AMOLED 120Hz', chipset:'Dimensity 9500', camera:'ZEISS 200MP', battery:'6000mAh' }, variants:[ {storage:'512GB', price:34999, promo:30999} ] },
-  { id:'vv-v70-5g', brand:'Vivo', model:'Vivo V70 5G', image:'https://placehold.co/600x600/94a3b8/0f172a?text=Vivo+V70+5G', inStock:true, isFlashSale:false, specs:{ display:'6.78" AMOLED 120Hz', chipset:'Snapdragon 7 Gen 4', camera:'50MP Dual', battery:'5600mAh' }, variants:[ {storage:'256GB', price:15999, promo:14499} ] },
-  { id:'op-r16-5g', brand:'OPPO', model:'OPPO Reno 16 5G', image:'https://placehold.co/600x600/15803d/ffffff?text=Reno+16+5G', inStock:true, isFlashSale:true, specs:{ display:'6.7" OLED 120Hz', chipset:'Dimensity 7400', camera:'50MP Triple', battery:'5600mAh' }, variants:[ {storage:'256GB', price:16999, promo:14999} ] },
-  { id:'xm-15t', brand:'Xiaomi', model:'Xiaomi 15T 5G (12/256)', image:'https://placehold.co/600x600/334155/ffffff?text=Xiaomi+15T', inStock:true, isFlashSale:true, specs:{ display:'6.67" AMOLED 144Hz', chipset:'Dimensity 8300', camera:'50MP Leica', battery:'5000mAh' }, variants:[ {storage:'128GB', price:15490, promo:14999}, {storage:'256GB', price:17490, promo:null} ] },
+  { id:'ap-iphone17pro', brand:'Apple', model:'iPhone 17 Pro', image:'https://fdn2.gsmarena.com/vv/bigpic/apple-iphone-17-pro.jpg', inStock:true, isFlashSale:false,
+    specs:{ display:'6.3" OLED ProMotion 120Hz Ceramic Shield 2', chipset:'Apple A19 Pro', camera:'48MP หลัก + 48MP อัลตร้าไวด์ + 48MP เทเลโฟโต้ 8x', battery:'3998mAh ชาร์จเร็ว 40W' },
+    variants:[ {storage:'256GB', price:45900, promo:null} ],
+    colors:[ {name:'Silver', hex:'#e3e4e5', image:null} ] },
+
+  { id:'ap-iphone17promax', brand:'Apple', model:'iPhone 17 Pro Max', image:'https://fdn2.gsmarena.com/vv/bigpic/apple-iphone-17-pro-max.jpg', inStock:true, isFlashSale:false,
+    specs:{ display:'6.9" OLED ProMotion 120Hz Ceramic Shield 2', chipset:'Apple A19 Pro', camera:'48MP หลัก + 48MP อัลตร้าไวด์ + 48MP เทเลโฟโต้ 8x', battery:'4823mAh ชาร์จเร็ว 42W' },
+    variants:[ {storage:'256GB', price:52900, promo:null} ],
+    colors:[ {name:'ส้ม (Cosmic Orange)', hex:'#d2661e', image:null}, {name:'Silver', hex:'#e3e4e5', image:null} ] },
+
+  // ---------------- SAMSUNG ----------------
+  { id:'sm-a07', brand:'Samsung', model:'Galaxy A07', image:'https://fdn2.gsmarena.com/vv/bigpic/samsung-galaxy-a07.jpg', inStock:true, isFlashSale:false,
+    specs:{ display:'6.7" PLS LCD 120Hz', chipset:'MediaTek Helio G99 Ultra', camera:'50MP หลัก + 2MP ความลึก', battery:'6000mAh ชาร์จเร็ว 25W' },
+    variants:[ {storage:'4GB/128GB', price:5299, promo:null} ],
+    colors:[ {name:'ดำ (Black)', hex:'#1c1c1e', image:null} ] },
+
+  { id:'sm-a07-5g', brand:'Samsung', model:'Galaxy A07 5G', image:'https://fdn2.gsmarena.com/vv/bigpic/samsung-galaxy-a07-5g.jpg', inStock:true, isFlashSale:false,
+    specs:{ display:'6.7" PLS LCD 120Hz', chipset:'MediaTek Dimensity 6300', camera:'50MP หลัก + 2MP ความลึก', battery:'6000mAh ชาร์จเร็ว 25W' },
+    variants:[ {storage:'4GB/128GB', price:6299, promo:null} ],
+    colors:[ {name:'ม่วงอ่อน (Light Violet)', hex:'#c9b8d9', image:null} ] },
+
+  { id:'sm-a17-5g', brand:'Samsung', model:'Galaxy A17 5G', image:'https://fdn2.gsmarena.com/vv/bigpic/samsung-galaxy-a17-5g.jpg', inStock:true, isFlashSale:false,
+    specs:{ display:'6.7" Super AMOLED Infinity-U 90Hz', chipset:'MediaTek Dimensity 6300', camera:'50MP หลัก + 5MP อัลตร้าไวด์ + 2MP มาโคร', battery:'5000mAh ชาร์จเร็ว 25W' },
+    variants:[ {storage:'8GB/128GB', price:8999, promo:null} ],
+    colors:[ {name:'ฟ้า (Blue)', hex:'#4a6fa5', image:null}, {name:'ดำ (Black)', hex:'#1c1c1e', image:null} ] },
+
+  { id:'sm-a27-5g', brand:'Samsung', model:'Galaxy A27 5G', image:'https://fdn2.gsmarena.com/vv/bigpic/samsung-galaxy-a27-5g.jpg', inStock:true, isFlashSale:false,
+    specs:{ display:'6.7" Super AMOLED Infinity-O 120Hz', chipset:'MediaTek Dimensity 7300', camera:'50MP หลัก + 8MP อัลตร้าไวด์ + 2MP มาโคร', battery:'5000mAh ชาร์จเร็ว 25W' },
+    variants:[ {storage:'8GB/128GB', price:10999, promo:null} ],
+    colors:[ {name:'ดำ (Black)', hex:'#1c1c1e', image:null} ] },
+
+  { id:'sm-a37-5g', brand:'Samsung', model:'Galaxy A37 5G', image:'https://fdn2.gsmarena.com/vv/bigpic/samsung-galaxy-a37-5g.jpg', inStock:true, isFlashSale:false,
+    specs:{ display:'6.7" Super AMOLED 120Hz', chipset:'Exynos 1480', camera:'50MP หลัก + 8MP อัลตร้าไวด์ + 2MP มาโคร', battery:'5000mAh ชาร์จเร็ว 45W' },
+    variants:[ {storage:'8GB/256GB', price:13999, promo:null} ],
+    colors:[ {name:'เขียวเทา (Graygreen)', hex:'#8a9a8b', image:null} ] },
+
+  { id:'sm-a57-5g', brand:'Samsung', model:'Galaxy A57 5G', image:'https://fdn2.gsmarena.com/vv/bigpic/samsung-galaxy-a57-5g.jpg', inStock:true, isFlashSale:false,
+    specs:{ display:'6.7" Super AMOLED Plus 120Hz', chipset:'Exynos 1680', camera:'50MP หลัก + 12MP อัลตร้าไวด์ + 5MP มาโคร', battery:'5000mAh ชาร์จเร็ว 45W' },
+    variants:[ {storage:'8GB/256GB', price:16999, promo:null}, {storage:'12GB/256GB', price:17999, promo:null} ],
+    colors:[ {name:'เทา (Gray)', hex:'#6b7280', image:null}, {name:'ม่วง (Lilac)', hex:'#b19cd9', image:null} ] },
+
+  { id:'sm-s26ultra', brand:'Samsung', model:'Galaxy S26 Ultra', image:'https://fdn2.gsmarena.com/vv/bigpic/samsung-galaxy-s26-ultra-new.jpg', inStock:true, isFlashSale:true,
+    specs:{ display:'6.9" Dynamic AMOLED 2X 120Hz', chipset:'Snapdragon 8 Elite Gen 5 for Galaxy', camera:'200MP หลัก + 50MP อัลตร้าไวด์ + 50MP เทเลโฟโต้ periscope', battery:'5200mAh ชาร์จเร็ว 45W' },
+    variants:[ {storage:'12GB/256GB', price:46900, promo:37900} ],
+    colors:[ {name:'ไทเทเนียมดำ (Titanium Black)', hex:'#1c1c1e', image:null}, {name:'ไทเทเนียมเทา (Titanium Gray)', hex:'#6b7280', image:null}, {name:'ไทเทเนียมม่วง (Titanium Violet)', hex:'#8a7ca8', image:null} ] },
+
+  // ---------------- OPPO ----------------
+  { id:'op-a6c', brand:'OPPO', model:'OPPO A6c', image:'https://fdn2.gsmarena.com/vv/bigpic/oppo-a6c.jpg', inStock:true, isFlashSale:false,
+    specs:{ display:'6.75" IPS LCD 120Hz', chipset:'Qualcomm Snapdragon 685', camera:'13MP หลัก', battery:'6500mAh ชาร์จ 15W' },
+    variants:[ {storage:'4GB/64GB', price:5499, promo:null}, {storage:'4GB/128GB', price:6499, promo:null} ],
+    colors:[ {name:'น้ำตาล (Stone Brown)', hex:'#8b5e3c', image:null}, {name:'ม่วง (Feather Purple)', hex:'#8a7ca8', image:null}, {name:'ขาว (Feather White)', hex:'#f2f2f2', image:null} ] },
+
+  { id:'op-a6s-5g', brand:'OPPO', model:'OPPO A6s 5G', image:'https://fdn2.gsmarena.com/vv/bigpic/oppo-a6s-5g.jpg', inStock:true, isFlashSale:false,
+    specs:{ display:'6.75" IPS LCD 120Hz', chipset:'MediaTek Dimensity 6300', camera:'50MP หลัก + 2MP ความลึก', battery:'7000mAh ชาร์จเร็ว 80W' },
+    variants:[ {storage:'8GB/128GB', price:13499, promo:null}, {storage:'8GB/256GB', price:14999, promo:null} ],
+    colors:[ {name:'น้ำตาล (Cappuccino Brown)', hex:'#8b5e3c', image:null}, {name:'ขาว (Ice White)', hex:'#f2f2f2', image:null} ] },
+
+  { id:'op-reno16f-5g', brand:'OPPO', model:'OPPO Reno 16F 5G', image:'https://fdn2.gsmarena.com/vv/bigpic/oppo-reno16-f-5g.jpg', inStock:true, isFlashSale:false,
+    specs:{ display:'6.57" OLED 120Hz', chipset:'MediaTek Dimensity 7300 Energy', camera:'50MP OIS หลัก + 8MP อัลตร้าไวด์', battery:'7000mAh ชาร์จเร็ว 80W' },
+    variants:[ {storage:'8GB/128GB', price:15999, promo:null}, {storage:'8GB/256GB', price:16999, promo:null} ],
+    colors:[ {name:'PopWhite', hex:'#f2f2f2', image:null}, {name:'ครีมม่วง (Cream Purple)', hex:'#c9b8d9', image:null}, {name:'TwilightViolet', hex:'#6a5a8c', image:null} ] },
+
+  { id:'op-reno16-5g', brand:'OPPO', model:'OPPO Reno 16 5G', image:'https://fdn2.gsmarena.com/vv/bigpic/oppo-reno16-5g.jpg', inStock:true, isFlashSale:false,
+    specs:{ display:'6.32" AMOLED 120Hz', chipset:'Snapdragon 7 Gen 4', camera:'50MP OIS หลัก + 8MP อัลตร้าไวด์', battery:'6700mAh ชาร์จเร็ว 80W' },
+    variants:[ {storage:'8GB/256GB', price:19999, promo:null}, {storage:'12GB/256GB', price:22999, promo:null} ],
+    colors:[ {name:'PopWhite', hex:'#f2f2f2', image:null}, {name:'ครีมม่วง (Cream Purple)', hex:'#c9b8d9', image:null}, {name:'TwilightViolet', hex:'#6a5a8c', image:null} ] },
+
+  // ---------------- VIVO ----------------
+  { id:'vv-y05', brand:'Vivo', model:'Vivo Y05', image:'https://fdn2.gsmarena.com/vv/bigpic/vivo-y05.jpg', inStock:true, isFlashSale:false,
+    specs:{ display:'6.74" IPS LCD 90Hz', chipset:'Unisoc T7225', camera:'13MP หลัก', battery:'6500mAh ชาร์จ 15W' },
+    variants:[ {storage:'4GB/64GB', price:4599, promo:null} ],
+    colors:[ {name:'ดำ (Black)', hex:'#1c1c1e', image:null}, {name:'แพลทินัม (Platinum)', hex:'#d4d4d4', image:null}, {name:'ฟ้า (Blue)', hex:'#4a6fa5', image:null} ] },
+
+  { id:'vv-y21d', brand:'Vivo', model:'Vivo Y21D', image:'https://fdn2.gsmarena.com/vv/bigpic/vivo-y21d.jpg', inStock:true, isFlashSale:false,
+    specs:{ display:'6.68" IPS LCD 90Hz', chipset:'Unisoc T7225', camera:'13MP หลัก + 2MP มาโคร', battery:'6500mAh ชาร์จ 15W' },
+    variants:[ {storage:'4GB/128GB', price:4999, promo:null} ],
+    colors:[ {name:'ดำ (Black)', hex:'#1c1c1e', image:null}, {name:'แดง (Red)', hex:'#b3372c', image:null} ] },
+
+  { id:'vv-y11d', brand:'Vivo', model:'Vivo Y11D', image:'https://fdn2.gsmarena.com/vv/bigpic/vivo-y11d.jpg', inStock:true, isFlashSale:false,
+    specs:{ display:'6.74" IPS LCD 90Hz', chipset:'MediaTek Dimensity 6300', camera:'50MP หลัก', battery:'6500mAh ชาร์จเร็ว 15W' },
+    variants:[ {storage:'4GB/128GB', price:5499, promo:null} ],
+    colors:[ {name:'ดำ (Black)', hex:'#1c1c1e', image:null}, {name:'ขาว (White/Platinum)', hex:'#d4d4d4', image:null} ] },
+
+  { id:'vv-y31d', brand:'Vivo', model:'Vivo Y31D', image:'https://fdn2.gsmarena.com/vv/bigpic/vivo-y31d.jpg', inStock:true, isFlashSale:false,
+    specs:{ display:'6.75" IPS LCD 120Hz', chipset:'Snapdragon 6s 4G Gen 2', camera:'50MP หลัก', battery:'7200mAh ชาร์จเร็ว 15W' },
+    variants:[ {storage:'6GB/128GB', price:7999, promo:null}, {storage:'6GB/256GB', price:9499, promo:null} ],
+    colors:[ {name:'เทา (Gray)', hex:'#6b7280', image:null}, {name:'ขาว (White)', hex:'#f2f2f2', image:null} ] },
+
+  { id:'vv-v70fe-5g', brand:'Vivo', model:'Vivo V70 FE 5G', image:'https://fdn2.gsmarena.com/vv/bigpic/vivo-v70-fe-.jpg', inStock:true, isFlashSale:false,
+    specs:{ display:'6.83" AMOLED 120Hz', chipset:'MediaTek Dimensity 7360 Turbo', camera:'200MP OIS หลัก + 8MP อัลตร้าไวด์', battery:'7000mAh ชาร์จเร็ว 90W' },
+    variants:[ {storage:'12GB/256GB', price:16999, promo:null} ],
+    colors:[ {name:'ม่วง (Northern Lights Purple)', hex:'#8a7ca8', image:null}, {name:'เงิน (Silver)', hex:'#e3e4e5', image:null}, {name:'ฟ้า (Monsoon Blue)', hex:'#4a6fa5', image:null} ] },
+
+  { id:'vv-v70-5g', brand:'Vivo', model:'Vivo V70 5G', image:'https://fdn2.gsmarena.com/vv/bigpic/vivo-v70.jpg', inStock:true, isFlashSale:false,
+    specs:{ display:'6.59" AMOLED 120Hz', chipset:'Snapdragon 7 Gen 4', camera:'50MP OIS หลัก + 50MP เทเลโฟโต้ periscope 3.7x + 8MP อัลตร้าไวด์', battery:'6500mAh ชาร์จเร็ว 90W' },
+    variants:[ {storage:'12GB/256GB', price:19999, promo:null} ],
+    colors:[ {name:'ดำ (Black)', hex:'#1c1c1e', image:null}, {name:'เทา (Gray)', hex:'#6b7280', image:null}, {name:'ทอง (Gold)', hex:'#c9a44c', image:null} ] },
 ];
 
 const state = {
@@ -674,6 +763,15 @@ function getSelectedColor(phone) {
 function getDisplayImage(phone) {
   const color = getSelectedColor(phone);
   return (color && color.image) ? color.image : phone.image;
+}
+
+// If a sourced product photo URL fails to load, fall back to a clean placeholder
+// instead of showing a broken image icon.
+function fallbackImgUrl(name) {
+  return `https://placehold.co/600x600/f1f5f9/64748b?text=${encodeURIComponent(name)}`;
+}
+function imgErrorAttr(name) {
+  return `this.onerror=null;this.src='${fallbackImgUrl(name)}'`;
 }
 
 function colorSwatches(phone) {
@@ -809,7 +907,7 @@ function flashSaleCard(p) {
   <div data-open-detail-card="${p.id}" class="w-[48%] sm:w-[32%] lg:w-[calc(25%-11px)] shrink-0 flash-card-border bg-white rounded-xl sm:rounded-2xl shadow-md p-2 sm:p-3.5 flex flex-col justify-between text-slate-900 select-none ${!p.inStock ? 'opacity-75' : ''}">
     <div>
       <div class="relative aspect-square rounded-lg sm:rounded-xl overflow-hidden bg-slate-50 mb-1.5 pointer-events-none">
-        <img src="${getDisplayImage(p)}" alt="${p.model}" loading="lazy" class="w-full h-full object-cover" />
+        <img src="${getDisplayImage(p)}" alt="${p.model}" loading="lazy" class="w-full h-full object-cover" onerror="${imgErrorAttr(p.model)}" />
         
         <!-- Clean Tag on Top Left -->
         <span class="flash-badge-corner flash-shimmer-badge absolute top-0 left-0 text-white font-black text-[9px] sm:text-[10px] pl-1.5 pr-3 py-0.5 flex items-center gap-0.5 shadow">
@@ -893,7 +991,7 @@ function standardProductCard(p) {
   return `
   <article data-open-detail-card="${p.id}" class="sim-card group bg-white rounded-xl sm:rounded-2xl border ${p.isFlashSale ? 'border-red-200 ring-1 ring-red-100' : 'border-slate-200'} shadow-card hover:shadow-cardHover transition-shadow p-2.5 sm:p-3.5 fade-in flex flex-col ${!p.inStock ? 'opacity-70' : ''}">
     <div class="relative aspect-square rounded-lg sm:rounded-xl overflow-hidden bg-slate-50 mb-2">
-      <img src="${getDisplayImage(p)}" alt="${p.model}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+      <img src="${getDisplayImage(p)}" alt="${p.model}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" onerror="${imgErrorAttr(p.model)}" />
       
       <!-- Brand Tag (Top Left) -->
       <span class="absolute top-1.5 left-1.5 text-[9px] sm:text-[10px] font-medium px-1.5 py-0.5 rounded-md bg-white/90 backdrop-blur text-slate-600 shadow-sm">${p.brand}</span>
@@ -1061,7 +1159,7 @@ function renderDetailModalContent() {
 
   $('detailModalBody').innerHTML = `
     <div class="relative aspect-square bg-slate-50">
-      <img src="${getDisplayImage(p)}" alt="${p.model}" class="w-full h-full object-cover" />
+      <img src="${getDisplayImage(p)}" alt="${p.model}" class="w-full h-full object-cover" onerror="${imgErrorAttr(p.model)}" />
       ${p.isFlashSale
         ? `<span class="absolute top-3 left-3 inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-1 rounded-lg flash-shimmer-badge text-white shadow"><i data-lucide="zap" class="w-3.5 h-3.5 fill-amber-300 text-amber-300"></i> FLASH SALE</span>`
         : `<span class="absolute top-3 left-3 text-[11px] font-medium px-2.5 py-1 rounded-lg bg-white/90 backdrop-blur text-slate-600 shadow-sm">${p.brand}</span>`}
